@@ -1,0 +1,26 @@
+{
+  "name": "be-macbooksg",
+  "version": "1.0.0",
+  "description": "Torung",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trungenglish/BE-MacbookSG.git"
+  },
+  "keywords": [
+    "nodejs",
+    "react"
+  ],
+  "author": "Torung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trungenglish/BE-MacbookSG/issues"
+  },
+  "homepage": "https://github.com/trungenglish/BE-MacbookSG#readme",
+  "dependencies": {
+    "express": "4.21.0"
+  }
+}
