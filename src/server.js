@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const connection = require('./config/database');
 const express = require('express');
+const apiRoutes = require('./routes/auth/auth');
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -11,7 +12,7 @@ const  hostname = process.env.HOST_NAME;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/',);
+app. use('/api/v1',apiRoutes);
 
 (async() => {
 //test connection
