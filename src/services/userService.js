@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 
-const createUserService = async(name, email, password) => {
+const createUserService = async(name, email, password, phone) => {
     try {
         const user = await User.findOne({ email });
         if (user){
@@ -15,13 +15,15 @@ const createUserService = async(name, email, password) => {
         let result = await User.create({
             name: name,
             email: email,
-            password: hashPassword
+            password: hashPassword,
+            phone: phone
         });
         return result;
     } catch (error){
         console.log(error);
         return null;
     }
+
 }
 
 module.exports = {
