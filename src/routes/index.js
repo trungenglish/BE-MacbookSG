@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const adminRoutes = require('./admin/authRouter');
-const userRoutes = require('./user/authRouter');
+
+const adminAuthRouter = require('./admin/authRouter');
+const adminUsersRouter = require('./admin/userRouter');
+
+const userAuthRouter = require('./user/authRouter');
 
 //User
-router.use('/admin',adminRoutes);
+router.use('/admin',adminAuthRouter);
+router.use('/admin',adminUsersRouter);
 
 //Admin
-router.use('/user',userRoutes);
+router.use('/user',userAuthRouter);
 
 
 module.exports = router;
