@@ -1,6 +1,6 @@
-const { createUserService, loginService} = require('../services/authService');
+const { createUserService, loginService} = require('../../services/user/authService');
 const Joi = require('joi');
-const userSchema = require('../validators/userValidator');
+const userSchema = require('../../validators/userValidator');
 
 const userRegister = async (req, res) => {
     const { name, email, password, phone } = req.body;
