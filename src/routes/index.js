@@ -6,11 +6,11 @@ const adminUsersRouter = require('./admin/userRouter');
 
 const userAuthRouter = require('./user/authRouter');
 
-//User
+//Admin
 router.use('/admin',adminAuthRouter);
 router.use('/admin',adminUsersRouter);
 
-//Admin
+//User
 router.use('/user',userAuthRouter);
 
 
