@@ -85,3 +85,7 @@ public/
 .tern-port
 
 database/
+
+# IntelliJ IDEA
+.idea/
+*.iml
