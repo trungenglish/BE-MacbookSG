@@ -1,8 +1,8 @@
 const {loginService, createAdminService} = require("../../services/admin/authService");
 
 const adminLogin = async (req, res) => {
-    const {email, password} = req.body;
-    const data = await loginService(email, password);
+    const {username, password} = req.body;
+    const data = await loginService(username, password);
     return res.status(200).json(data);
 }
 

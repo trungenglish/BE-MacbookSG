@@ -5,9 +5,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
-const loginService = async (email, password) => {
+const loginService = async (username, password) => {
     try {
-        const admin = await Admin.findOne({email: email});
+        const admin = await Admin.findOne({username: username});
         if (admin) {
             //compare password
             const isMatchPassword = await bcrypt.compare(password,admin.password);
@@ -18,8 +18,9 @@ const loginService = async (email, password) => {
                 }
             }else {
                 const payload = {
-                    email: admin.email,
+                    username: admin.username,
                     name: admin.name,
+                    role: admin.role
                 }
                 const access_token = jwt.sign(
                     payload,
@@ -32,15 +33,16 @@ const loginService = async (email, password) => {
                     EC: 0,
                     access_token,
                     admin: {
-                        email: admin.email,
+                        username: admin.username,
                         name: admin.name,
+                        role: admin.role
                     }
                 }
             }
         }else{
             return {
                 EC: 1,
-                EM: "Email/Password is incorrect"
+                EM: "Username/Password is incorrect"
             }
         }
     }catch(error) {
@@ -72,10 +74,16 @@ const createAdminService = async (name, username, email, password, role) => {
         const hashPassword = await bcrypt.hash(password, saltRounds);
         let result = await Admin.create({
             name: name,
+            username: username,
             email: email,
             password: hashPassword,
             role: role
         })
+        return {
+            EC: 0,
+            EM: "Admin account created successfully",
+            admin: result
+        }
     }catch (error){
         console.error(`Error creating admin: ${error.message}`);
         return {
