@@ -44,11 +44,47 @@ const loginService = async (email, password) => {
             }
         }
     }catch(error) {
-            console.log(error);
-            return null;
+        console.error(`Error logging admin: ${error.message}`);
+        return {
+            EC: -1,
+            EM: "An error occurred while logging the admin account"
+        };
+    }
+}
+
+const createAdminService = async (name, username, email, password, role) => {
+    try {
+        //check if admin exist
+        const existingAdmin = await Admin.findOne({
+            $or: [
+                { email: email },
+                { username: username }
+            ]
+        });
+        if (existingAdmin) {
+            console.log(`User exist ${email}`);
+            return {
+                EC: 1,
+                EM: "Email or Username already exists"
+            };
+        }
+        //hash password
+        const hashPassword = await bcrypt.hash(password, saltRounds);
+        let result = await Admin.create({
+            name: name,
+            email: email,
+            password: hashPassword,
+            role: role
+        })
+    }catch (error){
+        console.error(`Error creating admin: ${error.message}`);
+        return {
+            EC: -1,
+            EM: "An error occurred while creating the admin account"
+        };
     }
 }
 
 module.exports = {
-    loginService
+    loginService, createAdminService
 }
