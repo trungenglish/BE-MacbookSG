@@ -17,11 +17,14 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: false
         },
+        city: {
+            type: String,
+        }
     },{
         timestamps: true
     }
 );
 
-const UserModel = mongoose.model('user', userSchema);
+const UserModel = mongoose.model('Customer', userSchema);
 
 module.exports = UserModel;
