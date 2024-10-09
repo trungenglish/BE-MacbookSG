@@ -2,10 +2,10 @@ const User = require('../../models/userModel');
 
 const getUsersService = async () => {
     try {
-        const results = await User.find({});
+        const results = await User.find({}).select("-password");
         return {
             EC: 0,
-            EM: "Lấy danh sách users thành công",
+            EM: "Lấy danh sách người dùng thành công",
             data: results,
         };
     }catch (error) {
@@ -17,4 +17,29 @@ const getUsersService = async () => {
         };
     }
 
+}
+
+const putUpdateService = async (_id, name, phone, city) => {
+    try {
+        const results = await User.updateOne(
+            {_id:_id},
+            { $set:{name: name, phone: phone, city: city}})
+        return {
+            EC: 0,
+            EM: "Cập nhật danh sách người dùng thành công",
+            data: results,
+        };
+    }catch (error){
+        console.error("Error in putUpdateService: ", error);
+        return {
+            EC: 1,
+            EM: "Không thể cập nhật users",
+            data: [],
+        };
+    }
+}
+
+
+module.exports = {
+    getUsersService, putUpdateService
 }

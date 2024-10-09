@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const authMiddleware = (req, res, next) => {
     const white_lists = ['/user/register', '/user/login','/admin/register', '/admin/login'];
+
     if (white_lists.find(item => '/api/v1' + item === req.originalUrl)) {
         return next();
     } else {

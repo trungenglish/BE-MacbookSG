@@ -3,16 +3,21 @@ require('dotenv').config();
 const connection = require('./config/database');
 const express = require('express');
 const apiRoutes = require('./routes/index');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 8888;
 const  hostname = process.env.HOST_NAME;
+
+//config cors
+app.use(cors());
 
 //config req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app. use('/api/v1',apiRoutes);
+
 
 (async() => {
 //test connection
