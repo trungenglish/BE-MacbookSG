@@ -38,8 +38,9 @@ const loginService = async (email, password) => {
                 }
             }else {
                 const payload = {
-                    email: user.email,
-                    name: user.name,
+                    _id: user._id,
+                    // email: user.email,
+                    // name: user.name,
                 }
                 const access_token = jwt.sign(
                     payload,
@@ -71,6 +72,26 @@ const loginService = async (email, password) => {
     }
 }
 
+const getAccountService = async (_id) => {
+    try {
+        const user = await User.findById(_id);
+        if (!user) {
+            throw new Error('Người dùng không tồn tại.');
+        }
+        return {
+            EC: 0,
+            EM: 'Lấy thông tin người dùng thành công',
+            data: user,
+        };
+    } catch (error) {
+        return {
+            EC: 1,
+            EM: error.message,
+            data: null,
+        };
+    }
+}
+
 module.exports = {
-    createUserService, loginService
+    createUserService, loginService, getAccountService
 };
