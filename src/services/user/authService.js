@@ -9,7 +9,10 @@ const createUserService = async(name, email, password, phone) => {
         const user = await User.findOne({ email });
         if (user){
             console.log(`User exist ${email}`);
-            return null;
+            return {
+                EC: 1,
+                EM: "Email already exists"
+            };
         }
         const hashPassword = await bcrypt.hash(password,saltRounds)
         let result = await User.create({
@@ -18,10 +21,17 @@ const createUserService = async(name, email, password, phone) => {
             password: hashPassword,
             phone: phone
         });
-        return result;
+        return  {
+            EC: 0,
+            EM: "Tạo tài khoản thành công",
+            user: result
+        }
     } catch (error){
-        console.log(error);
-        return null;
+        console.error(`Error creating user: ${error.message}`);
+        return {
+            EC: -1,
+            EM: "An error occurred while creating the user account"
+        };
     }
 
 }
@@ -64,17 +74,17 @@ const loginService = async (email, password) => {
             }
         }
     } catch (error) {
-        console.log(error);
+        console.error(`Error logging user: ${error.message}`);
         return {
-            EC: 500,
-            EM: "Internal server error"
+            EC: -1,
+            EM: "An error occurred while logging the user account"
         };
     }
 }
 
 const getAccountService = async (_id) => {
     try {
-        const user = await User.findById(_id);
+        const user = await User.findById(_id).select("-password");
         if (!user) {
             throw new Error('Người dùng không tồn tại.');
         }
