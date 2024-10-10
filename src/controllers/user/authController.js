@@ -1,4 +1,4 @@
-const { createUserService, loginService} = require('../../services/user/authService');
+const { createUserService, loginService, getAccountService} = require('../../services/user/authService');
 const Joi = require('joi');
 const userSchema = require('../../validators/userValidator');
 
@@ -27,7 +27,14 @@ const userLogin = async (req, res) => {
     return res.status(200).json(data);
 }
 
+const userAccount = async (req, res) => {
+    const { _id } = req.user;
+    const data = await getAccountService(_id);
+    return res.status(200).json(data);
+}
+
 module.exports = {
     userRegister,
-    userLogin
+    userLogin,
+    userAccount
 };
