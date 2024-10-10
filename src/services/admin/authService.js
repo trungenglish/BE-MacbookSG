@@ -10,7 +10,7 @@ const loginService = async (username, password) => {
         const admin = await Admin.findOne({username: username});
         if (admin) {
             //compare password
-            const isMatchPassword = await bcrypt.compare(password,admin.password);
+            const isMatchPassword = await bcrypt.compare(password, admin.password);
             if (!isMatchPassword) {
                 return {
                     EC: 2,
@@ -18,9 +18,10 @@ const loginService = async (username, password) => {
                 }
             }else {
                 const payload = {
-                    username: admin.username,
-                    name: admin.name,
-                    role: admin.role
+                    _id: admin._id,
+                    // username: admin.username,
+                    // name: admin.name,
+                    // role: admin.role
                 }
                 const access_token = jwt.sign(
                     payload,
@@ -93,6 +94,26 @@ const createAdminService = async (name, username, email, password, role) => {
     }
 }
 
+const getAccountService = async (_id) => {
+    try {
+        const admin = await Admin.findById(_id).select("-password");
+        if (!admin) {
+            throw new Error('Người dùng không tồn tại.');
+        }
+        return {
+            EC: 0,
+            EM: 'Lấy thông tin người dùng thành công',
+            data: admin,
+        };
+    } catch (error) {
+        return {
+            EC: 1,
+            EM: error.message,
+            data: null,
+        };
+    }
+}
+
 module.exports = {
-    loginService, createAdminService
+    loginService, createAdminService, getAccountService
 }
