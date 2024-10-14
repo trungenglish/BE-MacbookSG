@@ -1,4 +1,4 @@
-const User = require('../../models/userModel');
+const User = require("../../models/userModel");
 
 const getUsersService = async () => {
     try {
@@ -9,14 +9,12 @@ const getUsersService = async () => {
             data: results,
         };
     }catch (error) {
-        console.error("Error in getUsersService: ", error);
         return {
             EC: 1,
-            EM: "Không thể lấy danh sách users",
+            EM: "Không thể lấy danh sách người dùng",
             data: [],
         };
     }
-
 }
 
 const putUpdateService = async (_id, name, phone, city) => {
@@ -30,16 +28,38 @@ const putUpdateService = async (_id, name, phone, city) => {
             data: results,
         };
     }catch (error){
-        console.error("Error in putUpdateService: ", error);
         return {
             EC: 1,
-            EM: "Không thể cập nhật users",
+            EM: "Không thể cập nhật nguời dùng",
             data: [],
         };
     }
 }
 
+const deleteUserService = async (id) => {
+    try {
+        const result = await User.deleteOne({_id: id});
+        if (result.deletedCount === 0) {
+            return {
+                EC: 1,
+                EM: "Người dùng không tồn tại hoặc đã bị xóa",
+                data: [],
+            };
+        }
+        return {
+            EC: 0,
+            EM: "Xóa người dùng thành công",
+            data: result,
+        };
+    }catch (error) {
+        return {
+            EC: 1,
+            EM: "Không thể xóa người dùng",
+            data: [],
+        };
+    }
+}
 
 module.exports = {
-    getUsersService, putUpdateService
+    getUsersService, putUpdateService, deleteUserService
 }
