@@ -4,14 +4,17 @@ const orderItemSchema = new mongoose.Schema({
         idOrder:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Order',
+            required: true,
         },
         idProduct:{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product',
+            required: true,
         },
         quantity:{
             type: Number,
             required: true,
+            min: 1,
         },
         priceAtPurchase:{
             type: Number,

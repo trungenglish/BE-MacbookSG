@@ -17,8 +17,9 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    category: {
-        type: String,
+    idCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
         required: true,
     },
     quantity: {
@@ -29,6 +30,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    isActive: {
+        type: Boolean,
+        default: true,
+    }
 }, { timestamps: true }
 );
 

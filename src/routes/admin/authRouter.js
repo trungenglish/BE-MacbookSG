@@ -1,12 +1,12 @@
 const express = require('express');
 const {adminLogin, adminRegister, adminAccount} = require("../../controllers/admin/authController");
 const auth = require("../../middleware/authMiddleware");
-const routerApi = express.Router();
+const routerAPI = express.Router();
 
-routerApi.all("*", auth);
+routerAPI.all("*", auth);
 
-routerApi.post('/login', adminLogin);
-routerApi.post('/register', adminRegister);
-routerApi.get('/account', adminAccount);
+routerAPI.post('/login', adminLogin);
+routerAPI.post('/register', adminRegister);
+routerAPI.get('/account', adminAccount);
 
-module.exports = routerApi;
+module.exports = routerAPI;
