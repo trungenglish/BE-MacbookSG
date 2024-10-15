@@ -51,7 +51,7 @@ const createProductService = async (name, price, imgUrls, description, idCategor
     }
 }
 
-const updateProductService = async (_id, name, price, imgUrls, description, category, quantity, discount) => {
+const updateProductService = async (_id, name, price, imgUrls, description, idCategory, quantity, discount) => {
     try {
         const result = await Product.findOneAndUpdate(
             {_id: _id},
@@ -61,7 +61,7 @@ const updateProductService = async (_id, name, price, imgUrls, description, cate
                     price: price,
                     imgUrls: imgUrls,
                     description: description,
-                    category: category,
+                    idCategory: idCategory,
                     quantity: quantity,
                     discount: discount
                 }

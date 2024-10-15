@@ -17,8 +17,8 @@ const createProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    const {name, price, imgUrls, description, idCategory, quantity, discount} = req.body;
-    const data = await updateProductService(name, price, imgUrls, description, idCategory, quantity, discount);
+    const {id, name, price, imgUrls, description, idCategory, quantity, discount} = req.body;
+    const data = await updateProductService(id, name, price, imgUrls, description, idCategory, quantity, discount);
     return res.status(200).json(data);
 }
 
@@ -30,7 +30,8 @@ const deleteProduct = async (req, res) => {
 
 const updateAvailableProducts = async (req, res) => {
     const {id} = req.params;
-    const data = await updateAvailableProductsService(id);
+    const { isActive } = req.body;
+    const data = await updateAvailableProductsService(id, isActive);
     return res.status(200).json(data);
 }
 
