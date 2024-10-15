@@ -66,7 +66,7 @@ const updateCateService = async (_id, name) => {
 
 const deleteCateService = async (_id) => {
     try {
-        const products = await Product.find({ category: _id });
+        const products = await Product.find({ idCategory: _id });
         if (products.length > 0) {
             return {
                 EC: 1,

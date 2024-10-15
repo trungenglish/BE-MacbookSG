@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    category: {
+    idCategory: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true,
@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    isActive: {
+        type: Boolean,
+        default: true,
+    }
 }, { timestamps: true }
 );
 

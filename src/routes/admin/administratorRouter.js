@@ -2,13 +2,13 @@ const express = require('express');
 const auth = require("../../middleware/authMiddleware");
 const {getAllAdministrator, updateAdministrator, deleteAdministrator} = require("../../controllers/admin/administratorController");
 const {adminRegister} = require("../../controllers/admin/authController");
-const routerApi = express.Router();
+const routerAPI = express.Router();
 
-routerApi.all("*", auth);
+routerAPI.all("*", auth);
 
-routerApi.get('/administrator', getAllAdministrator)
-routerApi.post('/administrator', adminRegister)
-routerApi.put('/administrator', updateAdministrator)
-routerApi.delete('/administrator', deleteAdministrator)
+routerAPI.get('/administrator', getAllAdministrator)
+routerAPI.post('/administrator', adminRegister)
+routerAPI.put('/administrator', updateAdministrator)
+routerAPI.delete('/administrator', deleteAdministrator)
 
-module.exports = routerApi;
+module.exports = routerAPI;
