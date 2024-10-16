@@ -28,9 +28,13 @@ const createProductService = async (name, price, imgUrls, description, idCategor
                 EM: "Product already exists"
             };
         }
+
+        const priceAfterDiscount = price - (price * discount / 100);
+
         const result = await Product.create({
             name: name,
             price: price,
+            priceAfterDiscount: priceAfterDiscount,
             imgUrls: imgUrls,
             description: description,
             idCategory: idCategory,
@@ -51,7 +55,7 @@ const createProductService = async (name, price, imgUrls, description, idCategor
     }
 }
 
-const updateProductService = async (_id, name, price, imgUrls, description, idCategory, quantity, discount) => {
+const updateProductService = async (_id, name, price, priceAfterDiscount, imgUrls, description, idCategory, quantity, discount) => {
     try {
         const result = await Product.findOneAndUpdate(
             {_id: _id},
@@ -59,6 +63,7 @@ const updateProductService = async (_id, name, price, imgUrls, description, idCa
                 $set: {
                     name: name,
                     price: price,
+                    priceAfterDiscount: priceAfterDiscount,
                     imgUrls: imgUrls,
                     description: description,
                     idCategory: idCategory,
@@ -123,6 +128,12 @@ const updateAvailableProductsService = async (_id, isActive) => {
             },
             {new: true}
         )
+        if (!result) {
+            return {
+                EC: 1,
+                EM: "Sản phẩm không tồn tại",
+            };
+        }
         return {
             EC: 0,
             EM: "Cập nhật trạng thái bán thành công",
