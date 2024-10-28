@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const Admin = require('../../models/adminModel')
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const {generateToken, verifyToken} = require('../../helpers/jwt.helper');
 const saltRounds = 10;
 
 const loginService = async (username, password) => {
@@ -19,20 +19,26 @@ const loginService = async (username, password) => {
             }else {
                 const payload = {
                     _id: admin._id,
-                    // username: admin.username,
-                    // name: admin.name,
-                    // role: admin.role
+                    username: admin.username,
+                    name: admin.name,
+                    role: admin.role
                 }
-                const access_token = jwt.sign(
+                const access_token = await generateToken(
                     payload,
                     process.env.JWT_SECRET,
-                    {
-                        expiresIn: process.env.JWT_EXPIRE
-                    }
-                )
+                    process.env.JWT_EXPIRE
+                );
+                const refreshToken = await generateToken(
+                    payload,
+                    process.env.JWT_SECRET_REFRESH,
+                    process.env.JWT_EXPIRE_REFRESH
+                );
+
                 return {
                     EC: 0,
+                    EM: "Login success",
                     access_token,
+                    refreshToken,
                     admin: {
                         username: admin.username,
                         name: admin.name,
@@ -114,6 +120,42 @@ const getAccountService = async (_id) => {
     }
 }
 
+const refreshTokenService = async (refreshToken) => {
+    try {
+        if (!refreshToken) {
+            return {
+                EC: 1,
+                EM: 'Token không hợp lệ',
+            };
+        }
+        const decoded = await verifyToken(
+            refreshToken,
+            process.env.JWT_SECRET_REFRESH
+        );
+        const payload = {
+            _id: decoded._id,
+            username: decoded.username,
+            name: decoded.name,
+            role: decoded.role,
+        };
+        const access_token = await generateToken(
+            payload,
+            process.env.JWT_SECRET,
+            process.env.JWT_EXPIRE
+        );
+        return {
+            EC: 0,
+            access_token,
+        }
+    }catch (error) {
+        console.error(`Error refreshing token: ${error.message}`);
+        return {
+            EC: -1,
+            EM: "An error occurred while refreshing the token"
+        };
+    }
+}
+
 module.exports = {
-    loginService, createAdminService, getAccountService
+    loginService, createAdminService, getAccountService, refreshTokenService
 }

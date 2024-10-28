@@ -1,4 +1,5 @@
 const User = require("../../models/userModel");
+const bcrypt = require("bcrypt");
 
 const getUsersService = async () => {
     try {
@@ -16,6 +17,7 @@ const getUsersService = async () => {
         };
     }
 }
+
 
 const putUpdateService = async (_id, name, phone, city) => {
     try {

@@ -17,8 +17,8 @@ const createProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    const {id, name, price, imgUrls, description, idCategory, quantity, discount} = req.body;
-    const data = await updateProductService(id, name, price, imgUrls, description, idCategory, quantity, discount);
+    const {_id, name, price, imgUrls, description, idCategory, quantity, discount} = req.body;
+    const data = await updateProductService(_id, name, price, imgUrls, description, idCategory, quantity, discount);
     return res.status(200).json(data);
 }
 

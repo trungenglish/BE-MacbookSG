@@ -3,7 +3,7 @@ const OrderItem = require('../models/orderItemModel')
 
 const getAllProductService = async () => {
     try {
-        const result = await Product.find();
+        const result = await Product.find().populate('idCategory');
         return {
             EC: 0,
             EM: "Lấy sản phẩm thành công",
@@ -44,7 +44,7 @@ const createProductService = async (name, price, imgUrls, description, idCategor
         return {
             EC: 0,
             EM: "Tạo sản phẩm thành công",
-            product: result,
+            data: result,
         };
     }catch (error) {
         console.error(`Error in creating product: ",  ${error.message}`);
