@@ -1,31 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const authAdminRouter = require('./admin/authRouter');
-const usersAdminRouter = require('./admin/userRouter');
-const cateAdminRouter = require('./admin/categoryRouter');
-const adminAdminRouter = require('./admin/administratorRouter');
-const productAdminRouter = require('./admin/productRouter');
-const orderAdminRouter = require('./admin/orderRouter');
-
-const authUserRouter = require('./user/authRouter');
-const cateUserRouter = require('./user/categoryRouter');
-const productUserRouter = require('./user/productRouter');
-const orderUserRouter = require('./user/orderRouter');
-
-
 //Admin
-router.use('/admin', authAdminRouter);
-router.use('/admin', usersAdminRouter);
-router.use('/admin', cateAdminRouter);
-router.use('/admin', adminAdminRouter);
-router.use('/admin', productAdminRouter);
-router.use('/admin', orderAdminRouter);
+router.use('/admin', require('./admin/authRouter'));
+router.use('/admin', require('./admin/userRouter'));
+router.use('/admin', require('./admin/categoryRouter'));
+router.use('/admin', require('./admin/administratorRouter'));
+router.use('/admin', require('./admin/productRouter'));
+router.use('/admin', require('./admin/orderRouter'));
 
 //User
-router.use('/user', authUserRouter);
-router.use('/user', cateUserRouter);
-router.use('/user', productUserRouter);
-router.use('/user', orderUserRouter);
+router.use('/user', require('./user/authRouter'));
+router.use('/user', require('./user/categoryRouter'));
+router.use('/user', require('./user/productRouter'));
+router.use('/user', require('./user/orderRouter'));
 
 module.exports = router;

@@ -1,10 +1,10 @@
 require('dotenv').config();
 const User = require('../../models/userModel');
 const bcrypt = require('bcrypt');
+const {generateToken, verifyToken} = require("../../helpers/jwt.helper");
 const saltRounds = 10;
-const jwt = require('jsonwebtoken');
 
-const createUserService = async(name, email, password, phone) => {
+const createUserService = async(name, email, password, phone, city) => {
     try {
         const user = await User.findOne({ email });
         if (user){
@@ -19,7 +19,8 @@ const createUserService = async(name, email, password, phone) => {
             name: name,
             email: email,
             password: hashPassword,
-            phone: phone
+            phone: phone,
+            city: city
         });
         return  {
             EC: 0,
@@ -49,18 +50,25 @@ const loginService = async (email, password) => {
             }else {
                 const payload = {
                     _id: user._id,
-                    // email: user.email,
-                    // name: user.name,
+                    email: user.email,
+                    name: user.name,
                 }
-                const access_token = jwt.sign(
+                const access_token = await generateToken(
                     payload,
                     process.env.JWT_SECRET,
-                    {expiresIn: process.env.JWT_EXPIRE}
-                )
+                    process.env.JWT_EXPIRE
+                );
+                const refreshToken = await generateToken(
+                    payload,
+                    process.env.JWT_SECRET_REFRESH,
+                    process.env.JWT_EXPIRE_REFRESH
+                );
+
                 return {
                     EC: 0,
                     EM: "Login success",
                     access_token,
+                    refreshToken,
                     user: {
                         name: user.name,
                         email: user.email,
@@ -102,6 +110,41 @@ const getAccountService = async (_id) => {
     }
 }
 
+const refreshTokenService = async (refreshToken) => {
+    try {
+        if (!refreshToken) {
+            return {
+                EC: 1,
+                EM: 'Token không hợp lệ',
+            };
+        }
+        const decoded = await verifyToken(
+            refreshToken,
+            process.env.JWT_SECRET_REFRESH
+        );
+        const payload = {
+            _id: decoded._id,
+            email: decoded.email,
+            name: decoded.name,
+        };
+        const access_token = await generateToken(
+            payload,
+            process.env.JWT_SECRET,
+            process.env.JWT_EXPIRE
+        );
+        return {
+            EC: 0,
+            access_token,
+        }
+    }catch (error) {
+        console.error(`Error refreshing token: ${error.message}`);
+        return {
+            EC: -1,
+            EM: "An error occurred while refreshing the token"
+        };
+    }
+}
+
 module.exports = {
-    createUserService, loginService, getAccountService
+    createUserService, loginService, getAccountService, refreshTokenService
 };
