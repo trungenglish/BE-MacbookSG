@@ -90,26 +90,6 @@ const loginService = async (email, password) => {
     }
 }
 
-const getAccountService = async (_id) => {
-    try {
-        const user = await User.findById(_id).select("-password");
-        if (!user) {
-            throw new Error('Người dùng không tồn tại.');
-        }
-        return {
-            EC: 0,
-            EM: 'Lấy thông tin người dùng thành công',
-            data: user,
-        };
-    } catch (error) {
-        return {
-            EC: 1,
-            EM: error.message,
-            data: null,
-        };
-    }
-}
-
 const refreshTokenService = async (refreshToken) => {
     try {
         if (!refreshToken) {
@@ -146,5 +126,5 @@ const refreshTokenService = async (refreshToken) => {
 }
 
 module.exports = {
-    createUserService, loginService, getAccountService, refreshTokenService
+    createUserService, loginService, refreshTokenService
 };

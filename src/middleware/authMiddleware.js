@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jwtHelper = require('../helpers/jwt.helper');
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     const white_lists = ['/user/register', '/user/login','/admin/register', '/admin/login'];
 
     if (white_lists.find(item => '/api/v1' + item === req.originalUrl)) {
@@ -10,12 +10,14 @@ const authMiddleware = (req, res, next) => {
         if (req?.headers?.authorization?.split(' ')[1]){
             const token = req.headers.authorization.split(' ')[1];
             try {
-                const decoded = jwtHelper.verifyToken(token, process.env.JWT_SECRET);
+                const decoded = await jwtHelper.verifyToken(token, process.env.JWT_SECRET);
+                console.log("decoded", decoded);
                 req.user = {
                     _id: decoded._id,
-                    // email: decoded.email,
-                    // name: decoded.name,
+                    email: decoded.email,
+                    name: decoded.name,
                 }
+                console.log("req.user", req.user);
                 next();
             } catch{
                 return res.status(401).json({

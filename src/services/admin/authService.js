@@ -19,6 +19,7 @@ const loginService = async (username, password) => {
             }else {
                 const payload = {
                     _id: admin._id,
+                    email: admin.email,
                     username: admin.username,
                     name: admin.name,
                     role: admin.role
@@ -41,6 +42,7 @@ const loginService = async (username, password) => {
                     refreshToken,
                     admin: {
                         username: admin.username,
+                        email: admin.email,
                         name: admin.name,
                         role: admin.role
                     }
@@ -100,26 +102,6 @@ const createAdminService = async (name, username, email, password, role) => {
     }
 }
 
-const getAccountService = async (_id) => {
-    try {
-        const admin = await Admin.findById(_id).select("-password");
-        if (!admin) {
-            throw new Error('Người dùng không tồn tại.');
-        }
-        return {
-            EC: 0,
-            EM: 'Lấy thông tin người dùng thành công',
-            data: admin,
-        };
-    } catch (error) {
-        return {
-            EC: 1,
-            EM: error.message,
-            data: null,
-        };
-    }
-}
-
 const refreshTokenService = async (refreshToken) => {
     try {
         if (!refreshToken) {
@@ -157,5 +139,5 @@ const refreshTokenService = async (refreshToken) => {
 }
 
 module.exports = {
-    loginService, createAdminService, getAccountService, refreshTokenService
+    loginService, createAdminService, refreshTokenService
 }
