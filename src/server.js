@@ -6,7 +6,7 @@ const apiRoutes = require('./routes/index');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 8888;
+const port = process.env.PORT || 10000;
 const isProduction = process.env.NODE_ENV === 'production';
 const host = isProduction ? '0.0.0.0' : 'localhost';
 
