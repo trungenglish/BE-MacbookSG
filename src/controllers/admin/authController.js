@@ -1,4 +1,4 @@
-const {loginService, createAdminService, getAccountService, refreshTokenService} = require("../../services/admin/authService");
+const {loginService, createAdminService, refreshTokenService} = require("../../services/admin/authService");
 
 const adminLogin = async (req, res) => {
     const {username, password} = req.body;
@@ -12,10 +12,9 @@ const adminRegister = async (req, res) => {
     return res.status(200).json(data);
 }
 
-const adminAccount = async (req, res) => {
-    const { _id } = req.user;
-    const data = await getAccountService(_id);
-    return res.status(200).json(data);
+const adminAccount = async (req,res) => {
+    console.log("check",req.user);
+    return res.status(200).json(req.user)
 }
 
 const adminRefreshToken = async (req, res) => {

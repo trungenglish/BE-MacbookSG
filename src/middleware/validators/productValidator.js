@@ -19,15 +19,6 @@ const productSchema = Joi.object({
             'any.required': 'Giá là bắt buộc',
         }),
 
-    priceAfterDiscount: Joi.number()
-        .min(0)
-        .required()
-        .messages({
-            'number.base': 'Giá sau giảm phải là một số',
-            'number.min': 'Giá sau giảm không được nhỏ hơn 0',
-            'any.required': 'Giá sau giảm là bắt buộc',
-        }),
-
     imgUrls: Joi.array()
         .items(Joi.string().uri())
         .required()

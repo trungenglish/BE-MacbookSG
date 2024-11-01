@@ -18,6 +18,23 @@ const getAllProductService = async () => {
     }
 }
 
+const getProductByCategoryService = async (idCategory) => {
+    try{
+        const result = await Product.find({idCategory: idCategory}).populate('idCategory');
+        return {
+            EC: 0,
+            EM: "Lấy sản phẩm thành công",
+            data: result
+        }
+    }catch (error){
+        return {
+            EC: 1,
+            EM: "Không thể lấy sản phẩm",
+            data: [],
+        };
+    }
+}
+
 const createProductService = async (name, price, imgUrls, description, idCategory, quantity, discount) => {
     try {
         const product = await Product.findOne({ name });
@@ -150,5 +167,5 @@ const updateAvailableProductsService = async (_id, isActive) => {
 
 module.exports = {
     getAllProductService, createProductService, updateProductService, deleteProductService,
-    updateAvailableProductsService
+    updateAvailableProductsService, getProductByCategoryService
 }
