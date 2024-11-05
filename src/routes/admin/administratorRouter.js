@@ -9,6 +9,6 @@ routerAPI.all("*", auth);
 routerAPI.get('/administrator', getAllAdministrator)
 routerAPI.post('/administrator', adminRegister)
 routerAPI.put('/administrator', updateAdministrator)
-routerAPI.delete('/administrator', deleteAdministrator)
+routerAPI.delete('/administrator/:id', deleteAdministrator)
 
 module.exports = routerAPI;

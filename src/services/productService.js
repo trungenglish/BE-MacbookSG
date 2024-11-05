@@ -35,7 +35,7 @@ const getProductByCategoryService = async (idCategory) => {
     }
 }
 
-const createProductService = async (name, price, imgUrls, description, idCategory, quantity, discount) => {
+const createProductService = async (name, condition, price, imgUrls, description, idCategory, quantity, discount) => {
     try {
         const product = await Product.findOne({ name });
         if (product){
@@ -50,6 +50,7 @@ const createProductService = async (name, price, imgUrls, description, idCategor
 
         const result = await Product.create({
             name: name,
+            condition: condition,
             price: price,
             priceAfterDiscount: priceAfterDiscount,
             imgUrls: imgUrls,
@@ -72,13 +73,14 @@ const createProductService = async (name, price, imgUrls, description, idCategor
     }
 }
 
-const updateProductService = async (_id, name, price, priceAfterDiscount, imgUrls, description, idCategory, quantity, discount) => {
+const updateProductService = async (_id, name, condition, price, priceAfterDiscount, imgUrls, description, idCategory, quantity, discount) => {
     try {
         const result = await Product.findOneAndUpdate(
             {_id: _id},
             {
                 $set: {
                     name: name,
+                    condition: condition,
                     price: price,
                     priceAfterDiscount: priceAfterDiscount,
                     imgUrls: imgUrls,
@@ -165,7 +167,25 @@ const updateAvailableProductsService = async (_id, isActive) => {
     }
 }
 
+const countProductService = async () => {
+    try {
+        const result = await Product.countDocuments();
+        return {
+            EC: 0,
+            EM: "Đếm sản phẩm thành công",
+            data: result
+        }
+    }catch (error) {
+        return {
+            EC: 1,
+            EM: "Không thể đếm sản phẩm",
+            data: [],
+        };
+    }
+}
+
+
 module.exports = {
     getAllProductService, createProductService, updateProductService, deleteProductService,
-    updateAvailableProductsService, getProductByCategoryService
+    updateAvailableProductsService, getProductByCategoryService, countProductService
 }

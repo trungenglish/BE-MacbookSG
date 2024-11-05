@@ -1,14 +1,45 @@
 const Order = require("../models/orderModel");
 const OrderItem = require("../models/orderItemModel");
+const User = require("../models/userModel");
 const {startSession} = require("mongoose");
 
 const getAllOrderService = async (req, res) => {
     try {
-        const result = await Order.find().populate("idProduct");
+        const result = await OrderItem.find()
+            .populate({
+                path: "idOrder",
+                populate: { path: "idUser" } })
+            .populate("idProduct");
+
+        const orderMap = {};
+
+        result.forEach(item => {
+            const idOrder = item.idOrder._id;
+            if (!orderMap[idOrder]) {
+                orderMap[idOrder] = {
+                    _id: idOrder,
+                    idUser: item.idOrder.idUser,
+                    totalPrice: item.idOrder.totalPrice,
+                    status: item.idOrder.status,
+                    createdAt: item.createdAt,
+                    products: [],
+                };
+            }
+
+            orderMap[idOrder].products.push({
+                _id: item.idProduct._id,
+                name: item.idProduct.name,
+                price: item.idProduct.price,
+                quantity: item.quantity,
+                priceAtPurchase: item.priceAtPurchase,
+            })
+        })
+
+        const resultArray = Object.values(orderMap)
         return {
             EC: 0,
             EM: "Lấy order thành công",
-            data: result
+            data: resultArray
         }
     }catch (error){
         return {
@@ -63,6 +94,17 @@ const createOrderService = async (items, idUser, quantity, totalPrice, status) =
         };
     }
 }
+
+// const deleteOrderService = async (_id) => {
+//     try {
+//         const result = await Order.find({idProduct: _id});
+//     } catch (error) {
+//         return {
+//             EC: 1,
+//             EM: "Không thể xóa order",
+//         };
+//     }
+// }
 
 module.exports = {
     getAllOrderService, createOrderService

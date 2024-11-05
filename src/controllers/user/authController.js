@@ -2,14 +2,14 @@ const { createUserService, loginService, refreshTokenService} = require('../../s
 const userSchema = require('../../middleware/validators/userValidator');
 
 const userRegister = async (req, res) => {
-    const { name, email, password, phone, city } = req.body;
-    const data = await createUserService(name, email, password, phone, city);
+    const { name, email, phone, city, password} = req.body;
+    const data = await createUserService( name, email, phone, city, password);
     return res.status(200).json(data);
 }
 
 const userLogin = async (req, res) => {
-    const { email, password } = req.body;
-    const data = await loginService(email, password);
+    const { phone, password } = req.body;
+    const data = await loginService(phone, password);
     return res.status(200).json(data);
 }
 

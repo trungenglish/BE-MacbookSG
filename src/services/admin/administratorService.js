@@ -43,13 +43,13 @@ const deleteAdministratorService = async (_id) => {
         const result = await Admin.deleteOne({_id: _id});
         return {
             EC: 0,
-            EM: "Xóa người dùng thành công",
+            EM: "Xóa tài khoản thành công",
             data: result,
         };
     } catch (error){
         return {
             EC: 1,
-            EM: "Không thể xóa người dùng",
+            EM: "Không thể tài khoản",
             data: [],
         };
     }

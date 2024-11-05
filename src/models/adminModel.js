@@ -22,7 +22,7 @@ const adminSchema = new mongoose.Schema({
         },
         role: {
             type: String,
-            enum: ['admin', 'support', 'finance']
+            enum: ['quản trị', 'hỗ trợ khách hàng', 'quản lý tài chính']
         }
     },{
         timestamps: true

@@ -7,8 +7,8 @@ const adminLogin = async (req, res) => {
 }
 
 const adminRegister = async (req, res) => {
-    const {name, username, email, password, role} = req.body;
-    const data = await createAdminService(name, username, email, password, role);
+    const {name, username, email, phone, password, role} = req.body;
+    const data = await createAdminService(name, username, email, phone, password, role);
     return res.status(200).json(data);
 }
 
