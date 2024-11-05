@@ -63,8 +63,9 @@ const loginService = async (username, password) => {
     }
 }
 
-const createAdminService = async (name, username, email, password, role) => {
+const createAdminService = async (name, username, email, phone, password, role) => {
     try {
+        console.log("Create admin service",name, username, email, phone, password, role);
         //check if admin exist
         const existingAdmin = await Admin.findOne({
             $or: [
@@ -85,6 +86,7 @@ const createAdminService = async (name, username, email, password, role) => {
             name: name,
             username: username,
             email: email,
+            phone: phone,
             password: hashPassword,
             role: role
         })

@@ -10,6 +10,15 @@ const productSchema = Joi.object({
             'any.required': 'Tên sản phẩm là bắt buộc',
         }),
 
+    condition: Joi.string()
+        .required()
+        .max(50)
+        .messages({
+            'string.empty': 'Tình trạng sản phẩm không được để trống',
+            'string.max': 'Tình trạng sản phẩm không được vượt quá 50 ký tự',
+            'any.required': 'Tình trạng sản phẩm là bắt buộc',
+        }),
+
     price: Joi.number()
         .positive()
         .required()

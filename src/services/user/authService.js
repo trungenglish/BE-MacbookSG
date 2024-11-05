@@ -4,14 +4,14 @@ const bcrypt = require('bcrypt');
 const {generateToken, verifyToken} = require("../../helpers/jwt.helper");
 const saltRounds = 10;
 
-const createUserService = async(name, email, password, phone, city) => {
+const createUserService = async(name, email, phone, city, password) => {
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ phone });
         if (user){
-            console.log(`User exist ${email}`);
+            console.log(`User exist ${phone}`);
             return {
                 EC: 1,
-                EM: "Email already exists"
+                EM: "Phone already exists"
             };
         }
         const hashPassword = await bcrypt.hash(password,saltRounds)
@@ -37,9 +37,9 @@ const createUserService = async(name, email, password, phone, city) => {
 
 }
 
-const loginService = async (email, password) => {
+const loginService = async (phone, password) => {
     try {
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({phone: phone});
         if (user) {
             const isMatchPassword = await bcrypt.compare(password, user.password);
             if (!isMatchPassword){
@@ -50,7 +50,7 @@ const loginService = async (email, password) => {
             }else {
                 const payload = {
                     _id: user._id,
-                    email: user.email,
+                    phone: user.phone,
                     name: user.name,
                 }
                 const access_token = await generateToken(
@@ -71,7 +71,7 @@ const loginService = async (email, password) => {
                     refreshToken,
                     user: {
                         name: user.name,
-                        email: user.email,
+                        phone: user.phone,
                     }
                 }
             }

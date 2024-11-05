@@ -6,6 +6,7 @@ const {getAllProduct, getProductByCategory} = require("../../controllers/product
 routerAPI.all("*", auth);
 
 routerAPI.get('/product', getAllProduct);
-routerAPI.get('/productByCate', getProductByCategory);
+routerAPI.get('/productByCate/:id', getProductByCategory);
+
 
 module.exports = routerAPI;

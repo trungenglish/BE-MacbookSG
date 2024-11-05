@@ -13,10 +13,8 @@ const userSchema = Joi.object({
 
     email: Joi.string()
         .email()
-        .required()
         .messages({
             'string.email': 'Email không hợp lệ',
-            'string.empty': 'Email không được để trống',
         }),
 
     phone: Joi.string()

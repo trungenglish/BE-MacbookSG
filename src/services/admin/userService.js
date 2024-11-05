@@ -18,7 +18,6 @@ const getUsersService = async () => {
     }
 }
 
-
 const putUpdateService = async (_id, name, phone, city) => {
     try {
         const results = await User.updateOne(
@@ -62,6 +61,23 @@ const deleteUserService = async (id) => {
     }
 }
 
+const countUserService = async () => {
+    try {
+        const result = await User.countDocuments();
+        return {
+            EC: 0,
+            EM: "Lấy số lượng người dùng thành công",
+            data: result,
+        };
+    }catch (error) {
+        return {
+            EC: 1,
+            EM: "Không thể lấy số lượng người dùng",
+            data: [],
+        };
+    }
+}
+
 module.exports = {
-    getUsersService, putUpdateService, deleteUserService
+    getUsersService, putUpdateService, deleteUserService, countUserService
 }
