@@ -11,16 +11,16 @@ const isProduction = process.env.NODE_ENV === 'production';
 const host = isProduction ? '0.0.0.0' : 'localhost';
 
 //config cors
-const corsOptions = {
-    origin: [
-        'https://trungenglishmacbooksgadmin.vercel.app',
-        'https://trungenglishmacbooksg.vercel.app'
-    ],
-    methods: 'GET,POST,PUT,DELETE',
-    credentials: true
-};
+// const corsOptions = {
+//     origin: [
+//         'https://trungenglishmacbooksgadmin.vercel.app',
+//         'https://trungenglishmacbooksg.vercel.app'
+//     ],
+//     methods: 'GET,POST,PUT,DELETE',
+//     credentials: true
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 //config req.body
 app.use(express.json());
