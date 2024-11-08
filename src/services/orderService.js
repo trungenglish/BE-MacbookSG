@@ -95,17 +95,17 @@ const createOrderService = async (items, idUser, quantity, totalPrice, status) =
     }
 }
 
-// const deleteOrderService = async (_id) => {
-//     try {
-//         const result = await Order.find({idProduct: _id});
-//     } catch (error) {
-//         return {
-//             EC: 1,
-//             EM: "Không thể xóa order",
-//         };
-//     }
-// }
+const deleteOrderService = async (_id) => {
+    try {
+        const result = await Order.find({idProduct: _id});
+    } catch (error) {
+        return {
+            EC: 1,
+            EM: "Không thể xóa order",
+        };
+    }
+}
 
 module.exports = {
-    getAllOrderService, createOrderService
+    getAllOrderService, createOrderService, deleteOrderService
 }

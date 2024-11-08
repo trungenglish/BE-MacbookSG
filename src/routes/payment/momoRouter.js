@@ -1,11 +1,10 @@
 const express = require('express');
 const routerAPI = express.Router();
 const auth = require("../../middleware/authMiddleware");
-const {getAllOrder} = require("../../controllers/orderController");
+
 
 routerAPI.all("*", auth);
 
-routerAPI.get('/order', getAllOrder)
-// routerAPI.delete('/order/:id', deleteOrder)
+routerAPI.get('/payment-momo',)
 
 module.exports = routerAPI;
