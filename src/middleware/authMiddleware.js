@@ -11,13 +11,11 @@ const authMiddleware = async (req, res, next) => {
             const token = req.headers.authorization.split(' ')[1];
             try {
                 const decoded = await jwtHelper.verifyToken(token, process.env.JWT_SECRET);
-                console.log("decoded", decoded);
                 req.user = {
                     _id: decoded._id,
                     email: decoded.email,
                     name: decoded.name,
                 }
-                console.log("req.user", req.user);
                 next();
             } catch{
                 return res.status(401).json({
