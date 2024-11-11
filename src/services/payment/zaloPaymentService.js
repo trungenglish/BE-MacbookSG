@@ -4,6 +4,7 @@ const moment = require('moment');
 const {startSession} = require("mongoose");
 const Order = require("../../models/orderModel");
 const OrderItem = require("../../models/orderItemModel");
+const Payment = require("../../models/paymentModel");
 
 const config = {
     app_id: process.env.ZALO_APP_ID,
@@ -37,12 +38,23 @@ const createZaloPaymentService = async (items, idUser, quantity, totalPrice) => 
             priceAtPurchase: item.priceAtPurchase,
         })), {session});
 
+        const transID = Math.floor(Math.random() * 1000000);
+        const paymentData = {
+            idOrder: newOrder[0]._id,
+            paymentMethod: 'ZaloPay',
+            paymentStatus: 'Đang chờ thanh toán',
+            amount: totalPrice,
+            appTransId: `${moment().format('YYMMDD')}_${transID}`,
+            idUser: idUser,
+            description: `Thanh toán đơn hàng #${transID}`,
+        };
+
+        const newPayment = await Payment.create([paymentData],{session});
+
         await session.commitTransaction();
         await session.endSession();
 
         //Step 3: Tạo yêu cầu thanh toán ZaloPay
-
-
         const embed_data = {
             redirecturl: "https://trungenglishmacbooksgclient.vercel.app/homepage",
         };
@@ -52,12 +64,12 @@ const createZaloPaymentService = async (items, idUser, quantity, totalPrice) => 
             quantity: item.quantity,
             price: item.priceAtPurchase
         }));
-        const transID = Math.floor(Math.random() * 1000000);
+
         const order = {
             app_id: config.app_id,
-            app_trans_id: `${moment().format('YYMMDD')}_${transID}`, // translation missing: vi.docs.shared.sample_code.comments.app_trans_id
+            app_trans_id: paymentData.appTransId,
             app_user: idUser,
-            app_time: Date.now(), // miliseconds
+            app_time: Date.now(),
             item: JSON.stringify(itemData),
             embed_data: JSON.stringify(embed_data),
             amount: totalPrice,
@@ -118,13 +130,24 @@ const callbackZaloPaymentService = async (dataStr, reqMac) => {
             // callback không hợp lệ
             result.return_code = -1;
             result.return_message = "mac not equal";
+            return result;
         }
         else {
             // thanh toán thành công
-            // merchant cập nhật trạng thái cho đơn hàng
             let dataJson = JSON.parse(dataStr, config.key2);
+            console.log("dataJson =", dataJson);
+            const appTransId = dataJson["app_trans_id"];
             console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
 
+            const payment = await Payment.findOne({appTransId})
+            if (!payment) {
+                result.return_code = -1;
+                result.return_message = "payment not found";
+                return result;
+            }else {
+                payment.paymentStatus = "Thanh toán thành công";
+                await payment.save();
+            }
             result.return_code = 1;
             result.return_message = "success";
         }
@@ -132,6 +155,8 @@ const callbackZaloPaymentService = async (dataStr, reqMac) => {
         result.return_code = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
         result.return_message = ex.message;
     }
+
+    return result
 }
 
 module.exports = {
