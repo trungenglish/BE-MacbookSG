@@ -82,7 +82,9 @@ const createOrderService = async (items, idUser, quantity, totalPrice, status) =
         return{
             EC: 0,
             EM: "Tạo đơn hàng thành công",
-            data: { order: newOrder[0], orderItem },
+            data: {
+                order: newOrder[0],
+                orderItem },
         };
     } catch(error) {
         await session.abortTransaction();

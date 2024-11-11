@@ -7,13 +7,29 @@ const paymentSchema = new mongoose.Schema({
     },
     paymentMethod:{
         type: String,
-        enum: ['Momo', 'QrCode', 'Bank Transfer'], // Các phương thức thanh toán khác nhau
+        enum: ['Momo', 'ZaloPay', 'QrCode', 'Bank Transfer'],
         required: true,
     },
-    status:{
+    paymentStatus:{
         type: String,
-        enum: ['pending', 'completed', 'canceled'],
-        default: 'pending',
+        enum: ['Đang chờ thanh toán', 'Thanh toán thành công', 'Thanh toán thất bại', 'Thanh toán đang được xử lý'],
+        default: 'Đang chờ thanh toán',
+    },
+    amount: {
+        type: Number,
+        required: true,
+    },
+    appTransId: {
+        type: String,
+        required: true,
+    },
+    idUser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    description: {
+        type: String,
     },
     }, { timestamps: true }
 );
