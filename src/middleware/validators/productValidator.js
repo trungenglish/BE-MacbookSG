@@ -10,33 +10,6 @@ const productSchema = Joi.object({
             'any.required': 'Tên sản phẩm là bắt buộc',
         }),
 
-    condition: Joi.string()
-        .required()
-        .max(50)
-        .messages({
-            'string.empty': 'Tình trạng sản phẩm không được để trống',
-            'string.max': 'Tình trạng sản phẩm không được vượt quá 50 ký tự',
-            'any.required': 'Tình trạng sản phẩm là bắt buộc',
-        }),
-
-    price: Joi.number()
-        .positive()
-        .required()
-        .messages({
-            'number.base': 'Giá phải là một số',
-            'number.positive': 'Giá phải là số dương',
-            'any.required': 'Giá là bắt buộc',
-        }),
-
-    imgUrls: Joi.array()
-        .items(Joi.string().uri())
-        .required()
-        .messages({
-            'string.uri': 'Mỗi hình ảnh phải có URL hợp lệ',
-            'array.base': 'imgUrls phải là một mảng',
-            'any.required': 'imgUrls là bắt buộc',
-        }),
-
     description: Joi.string()
         .optional()
         .messages({
@@ -50,35 +23,48 @@ const productSchema = Joi.object({
             'any.required': 'Danh mục là bắt buộc',
         }),
 
-    quantity: Joi.number()
-        .integer()
-        .min(0)
-        .default(0)
-        .messages({
-            'number.base': 'Số lượng phải là một số nguyên',
-            'number.min': 'Số lượng không được nhỏ hơn 0',
-        }),
-
-    discount: Joi.number()
-        .min(0)
-        .max(100)
-        .default(0)
-        .messages({
-            'number.base': 'Giảm giá phải là một số',
-            'number.min': 'Giảm giá không được nhỏ hơn 0',
-            'number.max': 'Giảm giá không được lớn hơn 100',
-        }),
-
     isActive: Joi.boolean()
-        .default(true)
+        .optional()
         .messages({
             'boolean.base': 'Trạng thái hoạt động phải là kiểu boolean',
         }),
+
+    images: Joi.array()
+        .items(Joi.string().uri())
+        .optional()
+        .messages({
+            'array.base': 'Hình ảnh phải là một mảng',
+            'string.uri': 'URL hình ảnh không hợp lệ',
+        }),
+
+    defaultVariant: Joi.object({
+        color: Joi.string().required(),
+        storage: Joi.string().required(),
+        price: Joi.number().required(),
+        priceAfterDiscount: Joi.number().optional(),
+        quantity: Joi.number().required(),
+        discount: Joi.number().optional(),
+        isActive: Joi.boolean().optional(),
+        isDefault: Joi.boolean().required()
+    }).optional(),
+
+    variants: Joi.array()
+        .items(Joi.object({
+            color: Joi.string().required(),
+            storage: Joi.string().required(),
+            price: Joi.number().required(),
+            priceAfterDiscount: Joi.number().optional(),
+            quantity: Joi.number().required(),
+            discount: Joi.number().optional(),
+            isActive: Joi.boolean().optional(),
+            isDefault: Joi.boolean().required()
+        }))
+        .optional()
 });
 
 const validateProduct = (req, res, next) => {
-    console.log("Dữ liệu gửi từ frontend:", req.body); // Kiểm tra dữ liệu từ client
-    const {error} = productSchema.validate(req.body, {abortEarly: true});
+    console.log("Dữ liệu gửi từ frontend:", req.body);
+    const { error } = productSchema.validate(req.body, { abortEarly: false });
 
     if (error) {
         const errors = error.details.map(err => err.message);

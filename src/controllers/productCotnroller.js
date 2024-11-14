@@ -1,8 +1,7 @@
-const {getAllProductService,
-    createProductService,
-    deleteProductService,
-    updateProductService,
-    updateAvailableProductsService, getProductByCategoryService, countProductService
+const {getAllProductService, createProductService,
+    deleteProductService, updateProductService,
+    updateAvailableProductsService, getProductByCategoryService,
+    countProductService, getProductByIdService
 } = require("../services/productService");
 
 const getAllProduct = async (req, res) => {
@@ -17,8 +16,8 @@ const getProductByCategory = async (req, res) => {
 }
 
 const createProduct = async (req, res) => {
-    const {name, condition, price, imgUrls, description, idCategory, quantity, discount} = req.body;
-    const data = await createProductService(name, condition, price, imgUrls, description, idCategory, quantity, discount);
+    const {name, description, idCategory, images, defaultVariant, variants} = req.body;
+    const data = await createProductService(name, description, idCategory, images, defaultVariant, variants);
     return res.status(200).json(data);
 }
 
@@ -46,7 +45,13 @@ const countProduct = async (req, res) => {
     return res.status(200).json(data);
 }
 
+const getProductById = async (req, res) => {
+    const { id } = req.params;
+    const data = await getProductByIdService(id);
+    return res.status(200).json(data);
+}
+
 module.exports = {
     getAllProduct, createProduct, updateProduct, deleteProduct, updateAvailableProducts, getProductByCategory,
-    countProduct
+    countProduct, getProductById
 }
