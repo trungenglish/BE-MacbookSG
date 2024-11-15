@@ -13,7 +13,6 @@ const adminRegister = async (req, res) => {
 }
 
 const adminAccount = async (req,res) => {
-    console.log("check",req.user);
     return res.status(200).json(req.user)
 }
 

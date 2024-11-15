@@ -5,24 +5,6 @@ const productSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        condition: {
-            type: String,
-            required: true,
-        },
-        price: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-        priceAfterDiscount: {
-            type: Number,
-            require: true,
-            min: 0,
-        },
-        imgUrls: {
-            type: [String],
-            required: true,
-        },
         description: {
             type: String,
         },
@@ -31,13 +13,8 @@ const productSchema = new mongoose.Schema({
             ref: 'Category',
             required: true,
         },
-        quantity: {
-            type: Number,
-            default: 0,
-        },
-        discount: {
-            type: Number,
-            default: 0,
+        images: {
+            type: [String],
         },
         isActive: {
             type: Boolean,

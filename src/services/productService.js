@@ -1,9 +1,11 @@
 const Product = require('../models/productModel')
+const ProductVariant = require('../models/productVariantModel')
 const OrderItem = require('../models/orderItemModel')
 
 const getAllProductService = async () => {
     try {
-        const result = await Product.find().populate('idCategory');
+        const result = await Product.find()
+            .populate('idCategory')
         return {
             EC: 0,
             EM: "Lấy sản phẩm thành công",
@@ -35,10 +37,10 @@ const getProductByCategoryService = async (idCategory) => {
     }
 }
 
-const createProductService = async (name, condition, price, imgUrls, description, idCategory, quantity, discount) => {
+const createProductService = async (name, description, idCategory, images, defaultVariant, variants) => {
     try {
-        const product = await Product.findOne({ name });
-        if (product){
+        const existingProduct  = await Product.findOne({ name });
+        if (existingProduct){
             console.log(`Product exist ${name}`);
             return {
                 EC: 1,
@@ -46,23 +48,45 @@ const createProductService = async (name, condition, price, imgUrls, description
             };
         }
 
-        const priceAfterDiscount = price - (price * discount / 100);
+        const product = new Product({
+            name,
+            description,
+            idCategory,
+            images: images || [],
+        });
 
-        const result = await Product.create({
-            name: name,
-            condition: condition,
-            price: price,
-            priceAfterDiscount: priceAfterDiscount,
-            imgUrls: imgUrls,
-            description: description,
-            idCategory: idCategory,
-            quantity: quantity,
-            discount: discount,
-        })
+        const savedProduct = await product.save();
+
+        const saveDefaultVariant = await ProductVariant.create([{
+            idPro: savedProduct._id,
+            color: defaultVariant.color,
+            storage: defaultVariant.storage,
+            price: defaultVariant.price,
+            priceAfterDiscount: defaultVariant.priceAfterDiscount,
+            quantity: defaultVariant.quantity,
+            discount: defaultVariant.discount,
+            isActive: defaultVariant.isActive,
+            isDefault: true,
+        }])
+
+        let savedVariants = [];
+
+        if (variants && variants.length > 0) {
+            const variantDocs = variants.map(variant => ({
+                ...variant,
+                idPro: savedProduct._id,
+            }));
+            savedVariants = await ProductVariant.insertMany(variantDocs);
+        }
+
         return {
             EC: 0,
             EM: "Tạo sản phẩm thành công",
-            data: result,
+            data: {
+                product: savedProduct,
+                defaultVariant: saveDefaultVariant,
+                variants: savedVariants,
+            },
         };
     }catch (error) {
         console.error(`Error in creating product: ",  ${error.message}`);
@@ -115,17 +139,20 @@ const deleteProductService = async (_id) => {
                EM: "Không thể xóa sản phẩm khi vẫn còn đơn hàng",
            };
         }
-        const result = await Product.deleteOne({_id: _id})
-        if (result.deletedCount === 0) {
+        const deletedProduct = await Product.deleteOne({_id: _id})
+        if (deletedProduct.deletedCount === 0) {
             return {
                 EC: 1,
                 EM: "Sản phẩm không tồn tại hoặc đã bị xóa",
             };
         }
+
+        const deletedProductVariant = await ProductVariant.deleteMany({idPro: _id})
+
         return {
             EC: 0,
             EM: "Xóa sản phẩm thành công",
-            data: result,
+            data: deletedProduct,
         };
     } catch (error) {
         return {
@@ -184,8 +211,37 @@ const countProductService = async () => {
     }
 }
 
+const getProductByIdService = async (_id) => {
+    try {
+        const mainProduct = await Product.findById(_id).populate('idCategory');
+
+        if (!mainProduct) {
+            return {
+                EC: 1,
+                EM: "Không tìm thấy sản phẩm",
+                data: [],
+            };
+        }
+
+        const variants = await ProductVariant.find({idPro: _id})
+        return {
+            EC: 0,
+            EM: "Lấy sản phẩm thành công",
+            data: {
+                mainProduct,
+                variants
+            }
+        }
+    } catch (e) {
+        return {
+            EC: 1,
+            EM: "Không thể lấy sản phẩm",
+            data: [],
+        };
+    }
+}
 
 module.exports = {
     getAllProductService, createProductService, updateProductService, deleteProductService,
-    updateAvailableProductsService, getProductByCategoryService, countProductService
+    updateAvailableProductsService, getProductByCategoryService, countProductService, getProductByIdService
 }
