@@ -4,7 +4,8 @@ const OrderItem = require('../models/orderItemModel')
 
 const getAllProductService = async () => {
     try {
-        const result = await Product.find().populate('idCategory');
+        const result = await Product.find()
+            .populate('idCategory')
         return {
             EC: 0,
             EM: "Lấy sản phẩm thành công",
@@ -138,17 +139,20 @@ const deleteProductService = async (_id) => {
                EM: "Không thể xóa sản phẩm khi vẫn còn đơn hàng",
            };
         }
-        const result = await Product.deleteOne({_id: _id})
-        if (result.deletedCount === 0) {
+        const deletedProduct = await Product.deleteOne({_id: _id})
+        if (deletedProduct.deletedCount === 0) {
             return {
                 EC: 1,
                 EM: "Sản phẩm không tồn tại hoặc đã bị xóa",
             };
         }
+
+        const deletedProductVariant = await ProductVariant.deleteMany({idPro: _id})
+
         return {
             EC: 0,
             EM: "Xóa sản phẩm thành công",
-            data: result,
+            data: deletedProduct,
         };
     } catch (error) {
         return {
@@ -209,11 +213,24 @@ const countProductService = async () => {
 
 const getProductByIdService = async (_id) => {
     try {
-        const result = await Product.findById(_id).exec();
+        const mainProduct = await Product.findById(_id).populate('idCategory');
+
+        if (!mainProduct) {
+            return {
+                EC: 1,
+                EM: "Không tìm thấy sản phẩm",
+                data: [],
+            };
+        }
+
+        const variants = await ProductVariant.find({idPro: _id})
         return {
             EC: 0,
             EM: "Lấy sản phẩm thành công",
-            data: result
+            data: {
+                mainProduct,
+                variants
+            }
         }
     } catch (e) {
         return {
