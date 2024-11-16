@@ -50,6 +50,12 @@ const getProductById = async (req, res) => {
     const data = await getProductByIdService(id);
     return res.status(200).json(data);
 }
+//
+// const getAllProductDefault = async (req, res) => {
+//     const {id} = req.params;
+//     const data = await getAllProductDefault();
+//     return res.status(200).json(data);
+// }
 
 module.exports = {
     getAllProduct, createProduct, updateProduct, deleteProduct, updateAvailableProducts, getProductByCategory,
