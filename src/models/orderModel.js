@@ -14,9 +14,17 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    address: {
+        type: String,
+        required: true,
+    },
+    note: {
+        type: String,
+        required: true,
+    },
     status: {
         type: String,
-        enum: ['pending', 'completed', 'canceled'],
+        enum: ['đang thanh toán', 'completed', 'canceled'],
         default: 'pending',
     },
     }, { timestamps: true }
