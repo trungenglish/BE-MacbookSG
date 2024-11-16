@@ -249,10 +249,6 @@ const getProductByIdService = async (_id) => {
     }
 }
 
-// const getAllProductDefaultService = async () => {
-//
-// }
-
 module.exports = {
     getAllProductService, createProductService, updateProductService, deleteProductService,
     updateAvailableProductsService, getProductByCategoryService, countProductService, getProductByIdService,
