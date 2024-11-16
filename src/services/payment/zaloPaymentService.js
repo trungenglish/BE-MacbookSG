@@ -13,7 +13,7 @@ const config = {
     endpoint: process.env.ZALO_APP_ENDPOINT
 };
 
-const createZaloPaymentService = async (items, idUser, quantity, totalPrice) => {
+const createZaloPaymentService = async (items, idUser, quantity, totalPrice, address, note) => {
     if (!items || items.length === 0) {
         return {
             EC: 1,
@@ -29,11 +29,13 @@ const createZaloPaymentService = async (items, idUser, quantity, totalPrice) => 
         const newOrder = await Order.create([{
             idUser: idUser,
             totalPrice: totalPrice,
+            address: address,
+            note: note,
         }], {session});
         // Step 2: Thêm sản phẩm vào OrderItem
         const orderItem = await OrderItem.insertMany(items.map(item => ({
             idOrder: newOrder[0]._id,
-            idProduct: item.idProduct,
+            idProVariant: item.idProVariant,
             quantity: item.quantity,
             priceAtPurchase: item.priceAtPurchase,
         })), {session});

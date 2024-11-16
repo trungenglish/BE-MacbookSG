@@ -6,9 +6,9 @@ const orderItemSchema = new mongoose.Schema({
             ref: 'Order',
             required: true,
         },
-        idProduct:{
+        idProVariant:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
+            ref: 'ProductVariant',
             required: true,
         },
         quantity:{
