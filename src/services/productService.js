@@ -22,11 +22,19 @@ const getAllProductService = async () => {
 
 const getProductByCategoryService = async (idCategory) => {
     try{
-        const result = await Product.find({idCategory: idCategory}).populate('idCategory');
+        const products = await Product.find({idCategory: idCategory}).populate('idCategory');
+
+        const productIds = products.map(product => product._id);
+
+        const productVariantsDefault = await ProductVariant.find({
+            isDefault: true,
+            idPro: { $in: productIds }
+        }).populate('idPro');
+
         return {
             EC: 0,
             EM: "Lấy sản phẩm thành công",
-            data: result
+            data: productVariantsDefault
         }
     }catch (error){
         return {
@@ -241,7 +249,11 @@ const getProductByIdService = async (_id) => {
     }
 }
 
+// const getAllProductDefaultService = async () => {
+//
+// }
+
 module.exports = {
     getAllProductService, createProductService, updateProductService, deleteProductService,
-    updateAvailableProductsService, getProductByCategoryService, countProductService, getProductByIdService
+    updateAvailableProductsService, getProductByCategoryService, countProductService, getProductByIdService,
 }
