@@ -21,7 +21,7 @@ const productVariantSchema = new mongoose.Schema({
     },
     priceAfterDiscount: {
         type: Number,
-        default: 0,  // Để tránh yêu cầu giá trị mặc định nếu không có giảm giá
+        default: 0,
         min: 0,
     },
     quantity: {
@@ -31,6 +31,9 @@ const productVariantSchema = new mongoose.Schema({
     discount: {
         type: Number,
         default: 0,
+    },
+    condition: {
+        type: String,
     },
     isActive: {
         type: Boolean,
