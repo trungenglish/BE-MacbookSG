@@ -14,6 +14,7 @@ const config = {
 };
 
 const createZaloPaymentService = async (items, idUser, quantity, totalPrice, address, note) => {
+    console.log("check", address, note);
     if (!items || items.length === 0) {
         return {
             EC: 1,
@@ -35,9 +36,9 @@ const createZaloPaymentService = async (items, idUser, quantity, totalPrice, add
         // Step 2: Thêm sản phẩm vào OrderItem
         const orderItem = await OrderItem.insertMany(items.map(item => ({
             idOrder: newOrder[0]._id,
-            idProVariant: item.idProVariant,
-            quantity: item.quantity,
-            priceAtPurchase: item.priceAtPurchase,
+            idProVariant: item._id,
+            quantity: item.quantityCart,
+            priceAtPurchase: item.priceAfterDiscount,
         })), {session});
 
         const transID = Math.floor(Math.random() * 1000000);

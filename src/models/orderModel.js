@@ -20,12 +20,11 @@ const orderSchema = new mongoose.Schema({
     },
     note: {
         type: String,
-        required: true,
     },
     status: {
         type: String,
-        enum: ['đang thanh toán', 'completed', 'canceled'],
-        default: 'pending',
+        enum: ['đang xử lý', 'hoàn thành', 'hủy đơn'],
+        default: 'đang xử lý',
     },
     }, { timestamps: true }
 );

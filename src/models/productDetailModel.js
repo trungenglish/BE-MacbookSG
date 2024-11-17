@@ -8,11 +8,11 @@ const productDetailSchema = new mongoose.Schema({
     storage: String,          // Dung lượng lưu trữ
     availableStorage: String, // Dung lượng còn lại (khả dụng)
     rearCameraResolution: String, // Độ phân giải camera sau
-    rearCameraVideo: [String],    // Quay phim camera sau
+    rearCameraVideo: String,    // Quay phim camera sau
     rearCameraFlash: String,      // Đèn flash camera sau
-    rearCameraFeatures: [String], // Tính năng camera sau
+    rearCameraFeatures: String, // Tính năng camera sau
     frontCameraResolution: String, // Độ phân giải camera trước
-    frontCameraFeatures: [String], // Tính năng camera trước
+    frontCameraFeatures: String, // Tính năng camera trước
     screenTechnology: String,      // Công nghệ màn hình
     screenResolution: String,      // Độ phân giải màn hình
     screenSize: String,            // Màn hình rộng
@@ -23,16 +23,16 @@ const productDetailSchema = new mongoose.Schema({
     maxChargingSupport: String,    // Hỗ trợ sạc tối đa
     batteryTechnology: [String],   // Công nghệ pin
     advancedSecurity: String,      // Bảo mật nâng cao
-    specialFeatures: [String],     // Tính năng đặc biệt
+    specialFeatures: String,     // Tính năng đặc biệt
     waterResistance: String,       // Kháng nước, bụi
     mobileNetwork: String,         // Mạng di động
     sim: String,                   // SIM
-    wifi: [String],                // WiFi
-    gps: [String],                 // GPS
+    wifi: String,                // WiFi
+    gps: String,                 // GPS
     bluetooth: String,             // Bluetooth
     chargingPort: String,          // Cổng kết nối/ sạc
     headphoneJack: String,         // Jack tai nghe
-    otherConnections: [String],    // Kết nối khác (NFC, v.v.)
+    otherConnections: String,    // Kết nối khác (NFC, v.v.)
     design: String,                // Thiết kế
     material: String,              // Chất liệu
     dimensions: String,            // Kích thước

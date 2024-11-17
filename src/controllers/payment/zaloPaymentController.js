@@ -1,8 +1,9 @@
 const {createZaloPaymentService,callbackZaloPaymentService} = require("../../services/payment/zaloPaymentService");
 
 const createZaloPayment = async (req, res) => {
-    const {items, idUser, quantity, totalPrice} = req.body;
-    const data = await createZaloPaymentService(items, idUser, quantity, totalPrice)
+    const {items, quantity, totalPrice, address, note} = req.body;
+    const {_id} = req.user;
+    const data = await createZaloPaymentService(items, _id, quantity, totalPrice, address, note)
     return res.status(200).json(data)
 }
 
