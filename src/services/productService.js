@@ -78,6 +78,7 @@ const createProductService = async (name, description, idCategory, images, defau
             priceAfterDiscount: defaultVariant.priceAfterDiscount,
             quantity: defaultVariant.quantity,
             discount: defaultVariant.discount,
+            condition: defaultVariant.conditon,
             isActive: defaultVariant.isActive,
             isDefault: true,
         }])
