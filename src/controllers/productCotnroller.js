@@ -16,8 +16,8 @@ const getProductByCategory = async (req, res) => {
 }
 
 const createProduct = async (req, res) => {
-    const {name, description, idCategory, images, defaultVariant, variants} = req.body;
-    const data = await createProductService(name, description, idCategory, images, defaultVariant, variants);
+    const {name, description, idCategory, images, defaultVariant, variants, specifications} = req.body;
+    const data = await createProductService(name, description, idCategory, images, defaultVariant, variants, specifications);
     return res.status(200).json(data);
 }
 

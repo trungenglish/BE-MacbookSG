@@ -1,6 +1,7 @@
 const Product = require('../models/productModel')
 const ProductVariant = require('../models/productVariantModel')
 const OrderItem = require('../models/orderItemModel')
+const ProductDetail = require('../models/productDetailModel')
 
 const getAllProductService = async () => {
     try {
@@ -45,7 +46,7 @@ const getProductByCategoryService = async (idCategory) => {
     }
 }
 
-const createProductService = async (name, description, idCategory, images, defaultVariant, variants) => {
+const createProductService = async (name, description, idCategory, images, defaultVariant, variants, specifications) => {
     try {
         const existingProduct  = await Product.findOne({ name });
         if (existingProduct){
@@ -56,11 +57,15 @@ const createProductService = async (name, description, idCategory, images, defau
             };
         }
 
+        const productDetail = new ProductDetail(specifications);
+        const savedProductDetail = await productDetail.save();
+
         const product = new Product({
             name,
             description,
             idCategory,
             images: images || [],
+            idProductDetail: savedProductDetail._id,
         });
 
         const savedProduct = await product.save();
@@ -92,6 +97,7 @@ const createProductService = async (name, description, idCategory, images, defau
             EM: "Tạo sản phẩm thành công",
             data: {
                 product: savedProduct,
+                productDetail: savedProductDetail,
                 defaultVariant: saveDefaultVariant,
                 variants: savedVariants,
             },

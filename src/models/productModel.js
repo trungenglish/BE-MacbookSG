@@ -19,7 +19,11 @@ const productSchema = new mongoose.Schema({
         isActive: {
             type: Boolean,
             default: true,
-        }
+        },
+        idProductDetail: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ProductDetail',
+        },
     }, { timestamps: true }
 );
 
