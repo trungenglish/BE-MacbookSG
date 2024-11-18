@@ -1,7 +1,13 @@
-const {createOrderService, getAllOrderService, deleteOrderService} = require("../services/orderService");
+const {createOrderService, getAllOrderService, deleteOrderService, getOrderByIdService} = require("../services/orderService");
 
 const getAllOrder = async (req, res) => {
     const data = await getAllOrderService()
+    return res.status(200).json(data)
+}
+
+const getOrderById = async (req, res) => {
+    const {id} = req.user
+    const data = await getOrderByIdService(id)
     return res.status(200).json(data)
 }
 
@@ -18,5 +24,5 @@ const deleteOrder = async (req, res) => {
 }
 
 module.exports = {
-    getAllOrder, createOrder, deleteOrder
+    getAllOrder, createOrder, deleteOrder, getOrderById
 }

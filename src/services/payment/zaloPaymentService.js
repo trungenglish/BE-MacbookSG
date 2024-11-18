@@ -59,7 +59,7 @@ const createZaloPaymentService = async (items, idUser, quantity, totalPrice, add
 
         //Step 3: Tạo yêu cầu thanh toán ZaloPay
         const embed_data = {
-            redirecturl: "https://trungenglishmacbooksgclient.vercel.app/homepage",
+            redirecturl: "https://trungenglishmacbooksgclient.vercel.app/your-order",
         };
 
         const itemData = items.map(item => ({
