@@ -53,51 +53,80 @@ const getAllOrderService = async () => {
 
 const getOrderByIdService = async (userId) => {
     try {
-        const result = await OrderItem.find()
+        // Tìm các order mà có idUser tương ứng
+        const orders = await Order.find({ idUser: userId });
+
+        if (!orders || orders.length === 0) {
+            return {
+                EC: 1,
+                EM: "Không tìm thấy đơn hàng cho user này",
+                data: [],
+            };
+        }
+
+        // Lấy idOrder từ các order tìm được
+        const orderIds = orders.map(order => order._id);
+
+        // Tìm các OrderItem có idOrder nằm trong danh sách orderIds
+        const orderItems = await OrderItem.find({ idOrder: { $in: orderIds } })
             .populate({
-                path: "idOrder",
-                match: { idUser: userId },
-                populate: { path: "idUser" }
-            })
-            .populate("idProduct");
+                path: "idProVariant",
+                populate: { path: "idPro" }
+            });
 
         const orderMap = {};
 
-        result.forEach(item => {
-            if (!item.idOrder) return; // Skip if order doesn't match the userId
+        orderItems.forEach(item => {
+            if (!item.idOrder) return;
 
             const idOrder = item.idOrder._id;
+
             if (!orderMap[idOrder]) {
+                // Tạo một order mới nếu chưa có
+                const order
+                    = orders.find(o => o._id.toString() === idOrder.toString());
                 orderMap[idOrder] = {
                     _id: idOrder,
-                    idUser: item.idOrder.idUser,
-                    totalPrice: item.idOrder.totalPrice,
-                    status: item.idOrder.status,
-                    address: item.idOrder.address,
-                    note: item.idOrder.note,
-                    createdAt: item.createdAt,
+                    idUser: order.idUser,
+                    totalPrice: order.totalPrice,
+                    status: order.status,
+                    address: order.address,
+                    note: order.note,
+                    createdAt: order.createdAt,
                     products: [],
                 };
             }
 
+            const productData = item.idProVariant.idPro;
+
+            // Thêm các sản phẩm vào order
             orderMap[idOrder].products.push({
-                _id: item.idProduct._id,
-                name: item.idProduct.name,
-                price: item.idProduct.price,
+                _id: item.idProVariant._id,
+                name: item.idProVariant.name,
+                price: item.idProVariant.price,
                 quantity: item.quantity,
-                storage: item.idProduct.storage,
-                color: item.idProduct.color,
+                storage: item.idProVariant.storage,
+                color: item.idProVariant.color,
                 priceAtPurchase: item.priceAtPurchase,
+                productDetails: {
+                    name: productData.name,
+                    description: productData.description,
+                    images: productData.images,
+                    isActive: productData.isActive,
+                    idProductDetail: productData.idProductDetail,
+                }
             });
         });
 
         const resultArray = Object.values(orderMap);
+
         return {
             EC: 0,
             EM: "Lấy order theo ID thành công",
-            data: resultArray
+            data: resultArray,
         };
     } catch (error) {
+        console.error(error);
         return {
             EC: 1,
             EM: "Không thể lấy order theo ID",
@@ -105,6 +134,7 @@ const getOrderByIdService = async (userId) => {
         };
     }
 };
+
 
 
 const createOrderService = async (items, idUser, quantity, totalPrice, status) => {
