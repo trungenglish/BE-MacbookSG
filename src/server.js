@@ -15,12 +15,14 @@ const corsOptions = {
     origin: [
         'https://trungenglishmacbooksgclient.vercel.app',
         'https://trungenglishmacbooksgadmin.vercel.app',
-        'trungenglishmacbooksgclient.vercel.app',
         'http://localhost:5173',
         'http://localhost:5174'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    // credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization'],  // Thêm header nếu cần
+    credentials: true,  // Nếu bạn đang truyền cookies hoặc session
+    preflightContinue: false,  // Dừng tiếp tục preflight
+    optionsSuccessStatus: 204,  // Trả status 204 cho OPTIONS request
 };
 
 app.use(cors(corsOptions));
