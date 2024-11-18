@@ -112,42 +112,135 @@ const createProductService = async (name, description, idCategory, images, defau
     }
 }
 
-const updateProductService = async (_id, name, condition, price, priceAfterDiscount, imgUrls, description, idCategory, quantity, discount) => {
+const updateProductService = async (_id, name, description, idCategory, images, defaultVariant, variants, specifications) => {
     try {
-        const result = await Product.findOneAndUpdate(
-            {_id: _id},
+        // Cập nhật thông tin cơ bản của sản phẩm
+        const updatedProduct = await Product.findOneAndUpdate(
+            { _id },
             {
                 $set: {
                     name: name,
-                    condition: condition,
-                    price: price,
-                    priceAfterDiscount: priceAfterDiscount,
-                    imgUrls: imgUrls,
                     description: description,
                     idCategory: idCategory,
-                    quantity: quantity,
-                    discount: discount
+                    images: images || []
                 }
             },
-            {new: true}
-        )
-        return {
-            EC: 0,
-            EM: "Cập nhật sản phẩm thành công",
-            data: result,
-        };
+            { new: true }
+        );
+
+        // Kiểm tra nếu product không tồn tại
+        if (!updatedProduct) {
+            return {
+                EC: 1,
+                EM: "Sản phẩm không tồn tại",
+                data: null,
+            };
+        }
+
+        // Kiểm tra nếu sản phẩm đang được sử dụng trong đơn hàng (OrderItem)
+        const orderItems = await OrderItem.find({ idProVariant: _id });
+        if (orderItems.length > 0) {
+            return {
+                EC: 1,
+                EM: "Không thể xóa sản phẩm khi vẫn còn đơn hàng",
+            };
+        }
+
+        // Cập nhật defaultVariant
+        const updatedDefaultVariant = await ProductVariant.findOneAndUpdate(
+            { idPro: _id, isDefault: true },
+            {
+                $set: {
+                    color: defaultVariant.color,
+                    storage: defaultVariant.storage,
+                    price: defaultVariant.price,
+                    priceAfterDiscount: defaultVariant.priceAfterDiscount,
+                    quantity: defaultVariant.quantity,
+                    discount: defaultVariant.discount,
+                    condition: defaultVariant.condition,
+                    isActive: defaultVariant.isActive,
+                }
+            },
+            { new: true, upsert: true }
+        );
+
+        // Cập nhật thông tin specifications (ProductDetail)
+        let updatedSpecifications = null;
+        if (specifications) {
+            updatedSpecifications = await ProductDetail.findOneAndUpdate(
+                { _id: updatedProduct.idProductDetail },
+                {
+                    $set: specifications
+                },
+                { new: true }
+            );
+        }
+
+        // Xử lý variants:
+        // 1. Nếu variants không có thay đổi, chỉ cập nhật các variant hiện có
+        if (variants && variants.length > 0) {
+            // Cập nhật các variant có sẵn
+            for (let variant of variants) {
+                await ProductVariant.findOneAndUpdate(
+                    { _id: variant._id },  // Dựa vào _id để cập nhật variant cụ thể
+                    {
+                        $set: {
+                            color: variant.color,
+                            storage: variant.storage,
+                            price: variant.price,
+                            priceAfterDiscount: variant.priceAfterDiscount,
+                            quantity: variant.quantity,
+                            discount: variant.discount,
+                            condition: variant.condition,
+                            isActive: variant.isActive,
+                        }
+                    },
+                    { new: true }
+                );
+            }
+
+            // Thêm mới variant nếu có
+            const newVariants = variants.filter(variant => !variant._id);  // Lọc những variant chưa có _id
+            const insertedVariants = newVariants.length > 0 ? await ProductVariant.insertMany(
+                newVariants.map(variant => ({
+                    ...variant,
+                    idPro: _id,
+                    isDefault: false
+                }))
+            ) : [];
+
+            return {
+                EC: 0,
+                EM: "Cập nhật sản phẩm thành công",
+                data: {
+                    product: updatedProduct,
+                    defaultVariant: updatedDefaultVariant,
+                    variants: [...newVariants, ...insertedVariants],
+                },
+            };
+        } else {
+            return {
+                EC: 0,
+                EM: "Cập nhật sản phẩm thành công (không có variants mới)",
+                data: {
+                    product: updatedProduct,
+                    defaultVariant: updatedDefaultVariant,
+                },
+            };
+        }
     } catch (error) {
+        console.error(`Error in updating product: ${error.message}`);
         return {
             EC: 1,
             EM: "Không thể cập nhật sản phẩm",
             data: [],
         };
     }
-}
+};
 
 const deleteProductService = async (_id) => {
     try {
-        const orderItems = await OrderItem.find({idProduct: _id});
+        const orderItems = await OrderItem.find({idProVariant: _id});
         if (orderItems.length > 0) {
            return {
                EC: 1,
@@ -228,8 +321,9 @@ const countProductService = async () => {
 
 const getProductByIdService = async (_id) => {
     try {
-        const mainProduct = await Product.findById(_id).populate('idCategory');
-
+        const mainProduct = await Product.findById(_id)
+            .populate('idCategory')
+            .populate('idProductDetail');
         if (!mainProduct) {
             return {
                 EC: 1,

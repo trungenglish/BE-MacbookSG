@@ -21,7 +21,7 @@ const productDetailSchema = new mongoose.Schema({
     batteryCapacity: String,       // Dung lượng pin
     batteryType: String,           // Loại pin
     maxChargingSupport: String,    // Hỗ trợ sạc tối đa
-    batteryTechnology: [String],   // Công nghệ pin
+    batteryTechnology: String,   // Công nghệ pin
     advancedSecurity: String,      // Bảo mật nâng cao
     specialFeatures: String,     // Tính năng đặc biệt
     waterResistance: String,       // Kháng nước, bụi

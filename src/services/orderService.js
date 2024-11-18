@@ -1,9 +1,8 @@
 const Order = require("../models/orderModel");
 const OrderItem = require("../models/orderItemModel");
-const User = require("../models/userModel");
 const {startSession} = require("mongoose");
 
-const getAllOrderService = async (req, res) => {
+const getAllOrderService = async () => {
     try {
         const result = await OrderItem.find()
             .populate({
@@ -21,6 +20,8 @@ const getAllOrderService = async (req, res) => {
                     idUser: item.idOrder.idUser,
                     totalPrice: item.idOrder.totalPrice,
                     status: item.idOrder.status,
+                    address: item.idOrder.address,
+                    note: item.idOrder.note,
                     createdAt: item.createdAt,
                     products: [],
                 };
@@ -49,6 +50,62 @@ const getAllOrderService = async (req, res) => {
         };
     }
 }
+
+const getOrderByIdService = async (userId) => {
+    try {
+        const result = await OrderItem.find()
+            .populate({
+                path: "idOrder",
+                match: { idUser: userId },
+                populate: { path: "idUser" }
+            })
+            .populate("idProduct");
+
+        const orderMap = {};
+
+        result.forEach(item => {
+            if (!item.idOrder) return; // Skip if order doesn't match the userId
+
+            const idOrder = item.idOrder._id;
+            if (!orderMap[idOrder]) {
+                orderMap[idOrder] = {
+                    _id: idOrder,
+                    idUser: item.idOrder.idUser,
+                    totalPrice: item.idOrder.totalPrice,
+                    status: item.idOrder.status,
+                    address: item.idOrder.address,
+                    note: item.idOrder.note,
+                    createdAt: item.createdAt,
+                    products: [],
+                };
+            }
+
+            orderMap[idOrder].products.push({
+                _id: item.idProduct._id,
+                name: item.idProduct.name,
+                price: item.idProduct.price,
+                quantity: item.quantity,
+                storage: item.idProduct.storage,
+                color: item.idProduct.color,
+                priceAtPurchase: item.priceAtPurchase,
+            });
+        });
+
+        const resultArray = Object.values(orderMap);
+        return {
+            EC: 0,
+            EM: "Lấy order theo ID thành công",
+            data: resultArray
+        };
+    } catch (error) {
+        return {
+            EC: 1,
+            EM: "Không thể lấy order theo ID",
+            data: [],
+        };
+    }
+};
+
 
 const createOrderService = async (items, idUser, quantity, totalPrice, status) => {
     if (!items || items.length === 0) {
@@ -109,5 +166,5 @@ const deleteOrderService = async (_id) => {
 }
 
 module.exports = {
-    getAllOrderService, createOrderService, deleteOrderService
+    getAllOrderService, createOrderService, deleteOrderService, getOrderByIdService
 }
