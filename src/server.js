@@ -25,7 +25,7 @@ const corsOptions = {
     optionsSuccessStatus: 204,  // Trả status 204 cho OPTIONS request
 };
 
-app.use(cors(corsOptions));
+app.use("*",cors(corsOptions));
 
 //config req.body
 app.use(express.json());
