@@ -19,13 +19,10 @@ const corsOptions = {
         'http://localhost:5174'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],  // Thêm header nếu cần
     credentials: true,  // Nếu bạn đang truyền cookies hoặc session
-    preflightContinue: false,  // Dừng tiếp tục preflight
-    optionsSuccessStatus: 204,  // Trả status 204 cho OPTIONS request
 };
 
-app.use("*",cors(corsOptions));
+app.use(cors(corsOptions));
 
 //config req.body
 app.use(express.json());
