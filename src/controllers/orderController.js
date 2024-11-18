@@ -6,8 +6,8 @@ const getAllOrder = async (req, res) => {
 }
 
 const getOrderById = async (req, res) => {
-    const {id} = req.user
-    const data = await getOrderByIdService(id)
+    const {_id} = req.user
+    const data = await getOrderByIdService(_id)
     return res.status(200).json(data)
 }
 
