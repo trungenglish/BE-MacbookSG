@@ -15,11 +15,12 @@ const corsOptions = {
     origin: [
         'https://trungenglishmacbooksgclient.vercel.app',
         'https://trungenglishmacbooksgadmin.vercel.app',
+        'trungenglishmacbooksgclient.vercel.app',
         'http://localhost:5173',
         'http://localhost:5174'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true
+    // credentials: true
 };
 
 app.use(cors(corsOptions));
