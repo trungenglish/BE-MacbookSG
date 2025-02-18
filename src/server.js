@@ -3,6 +3,8 @@ require('dotenv').config();
 const connection = require('./config/database');
 const express = require('express');
 const apiRoutes = require('./routes/index');
+const compression = require('compression');
+const morgan = require('morgan');
 const cors = require('cors');
 
 const app = express();
@@ -23,13 +25,14 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(morgan('dev'));
+app.use(compression());
 
 //config req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app. use('/api/v1',apiRoutes);
-
 
 (async() => {
 //test connection

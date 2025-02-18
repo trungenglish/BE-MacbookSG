@@ -12,8 +12,9 @@ const getOrderById = async (req, res) => {
 }
 
 const createOrder = async (req, res) => {
-    const {items, idUser, quantity, totalPrice, status} = req.body
-    const data = await createOrderService(items, idUser, quantity, totalPrice, status)
+    const {items, quantity, totalPrice, address, note} = req.body
+    const {_id} = req.user;
+    const data = await createOrderService(items, _id, quantity, totalPrice, address, note)
     return res.status(200).json(data)
 }
 
