@@ -7,9 +7,9 @@ const getAllOrderService = async () => {
         const result = await OrderItem.find()
             .populate({
                 path: "idOrder",
-                populate: { path: "idUser" } })
-            .populate("idProduct");
-
+                populate: { path: "idUser" }
+                })
+            .populate("idProVariant");
         const orderMap = {};
 
         result.forEach(item => {
@@ -28,9 +28,9 @@ const getAllOrderService = async () => {
             }
 
             orderMap[idOrder].products.push({
-                _id: item.idProduct._id,
-                name: item.idProduct.name,
-                price: item.idProduct.price,
+                _id: item.idProVariant._id,
+                name: item.idProVariant.name,
+                price: item.idProVariant.price,
                 quantity: item.quantity,
                 priceAtPurchase: item.priceAtPurchase,
             })
@@ -137,7 +137,7 @@ const getOrderByIdService = async (userId) => {
 
 
 
-const createOrderService = async (items, idUser, quantity, totalPrice, status) => {
+const createOrderService = async (items, idUser, quantity, totalPrice, address, note) => {
     if (!items || items.length === 0) {
         return {
             EC: 1,
@@ -153,14 +153,15 @@ const createOrderService = async (items, idUser, quantity, totalPrice, status) =
         const newOrder = await Order.create([{
             idUser: idUser,
             totalPrice: totalPrice,
-            status: status
+            address: address,
+            note: note
         }], { session });
-        //step 2:
+        //step 2: add product to OrderItem
         const orderItem = await OrderItem.insertMany(items.map(item => ({
             idOrder: newOrder[0]._id,
-            idProduct: item.idProduct,
-            quantity: item.quantity,
-            priceAtPurchase: item.priceAtPurchase,
+            idProVariant: item._id,
+            quantity: item.quantityCart,
+            priceAtPurchase: item.priceAfterDiscount,
         })), { session });
 
         await session.commitTransaction();
@@ -171,7 +172,8 @@ const createOrderService = async (items, idUser, quantity, totalPrice, status) =
             EM: "Tạo đơn hàng thành công",
             data: {
                 order: newOrder[0],
-                orderItem },
+                orderItem
+            },
         };
     } catch(error) {
         await session.abortTransaction();

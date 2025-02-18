@@ -10,7 +10,7 @@ const validateProductVariant = require("../../middleware/validators/productVaria
 routerAPI.all("*", auth);
 
 routerAPI.get('/product', getAllProduct);
-routerAPI.post('/product',  createProduct);
+routerAPI.post('/product', createProduct);
 routerAPI.put('/product', updateProduct);
 routerAPI.delete('/product/:id', deleteProduct);
 routerAPI.put('/product/availability/:id', updateAvailableProducts);

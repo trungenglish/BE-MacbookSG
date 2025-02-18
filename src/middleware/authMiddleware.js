@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwtHelper = require('../helpers/jwt.helper');
+const {decode} = require("jsonwebtoken");
 
 const authMiddleware = async (req, res, next) => {
     const white_lists = ['/user/register', '/user/login','/admin/register', '/admin/login'];
@@ -15,6 +16,7 @@ const authMiddleware = async (req, res, next) => {
                     _id: decoded._id,
                     email: decoded.email,
                     name: decoded.name,
+                    roles: decoded.role
                 }
                 next();
             } catch{
