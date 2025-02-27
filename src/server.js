@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const connection = require('./config/database');
+const Database = require('./config/database');
 const express = require('express');
 const apiRoutes = require('./routes/index');
 const compression = require('compression');
@@ -34,14 +34,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app. use('/api/v1',apiRoutes);
 
-(async() => {
-//test connection
-    try {
-        await connection();
-        app.listen(port, host, () => {
-            console.log(`Backend zero app listening on port ${port}`)
-        })
-    } catch (error) {
-        console.log(">>> Error connect to db: ", error);
-    }
-})()
+app.listen(port, host, () => {
+    console.log(`🚀 Backend is running on http://${host}:${port}`);
+});
+
+// (async() => {
+// //test connection
+//     try {
+//         await connection();
+//         app.listen(port, host, () => {
+//             console.log(`Backend zero app listening on port ${port}`)
+//         })
+//     } catch (error) {
+//         console.log(">>> Error connect to db: ", error);
+//     }
+// })()
