@@ -1,8 +1,22 @@
 const {getAllCateService, createCateService, updateCateService, deleteCateService } = require('../services/categoryService');
+const ResponseFactory = require('../core/response/ResponseFactory');
 
 const getAllCate = async (req, res) => {
-    const data = await getAllCateService();
-    return res.status(200).json(data);
+    try {
+        const result = await getAllCateService();
+        if (result.EC !== 0){
+            return res
+            .status(400)
+            .json(ResponseFactory.error(result.EM, 400));
+        }
+        return res
+            .status(200)
+            .json(ResponseFactory.success(result.data, result.EM, 200));
+    } catch (error) {
+        return res
+            .status(500)
+            .json(ResponseFactory.error('Internal server error', 500));
+    }
 }
 
 const createCate = async (req, res) => {

@@ -35,7 +35,6 @@ const createCateService = async (name) => {
             cate: result,
         };
     }catch (error) {
-        console.error(`Error in creating category: ",  ${error.message}`);
         return {
             EC: 1,
             EM: "Không thể tạo danh mục",

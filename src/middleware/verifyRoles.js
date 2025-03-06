@@ -1,13 +1,24 @@
 const errorHandler = require('../helpers/errorHandler')
+const ResponseFactory = require('../core/response/ResponseFactory')
 
 const verifyRoles = (...allowedRoles) => async (req, res, next) => {
     try {
         if (!req?.user) {
-            throw new Error('User information not found');
+            return res
+            .status(401)
+            .json(ResponseFactory.error(
+                'User information not found',
+                401,
+            ));
         }
 
         if (!req.user?.roles) {
-            throw new Error('User roles not found');
+            return res
+            .status(401)
+            .json(ResponseFactory.error(
+                'User roles not found',
+                401,
+            ));
         }
 
         // Convert roles to array if it's not already
@@ -21,12 +32,26 @@ const verifyRoles = (...allowedRoles) => async (req, res, next) => {
         );
 
         if (!hasAllowedRole) {
-            throw new Error('Insufficient permissions');
+            return res
+            .status(403)
+            .json(ResponseFactory.error(
+                'Insufficient permissions',
+                403,
+                {
+                    userRoles: userRoles,
+                    requiredRoles: allowedRoles
+                }
+            ));
         }
 
         next();
     } catch (error) {
-        return errorHandler(res, 403, error.message || 'Role verification failed');
+        return res
+            .status(500)
+            .json(ResponseFactory.error(
+                error.message || 'Role verification failed',
+                500
+            ));
     }
 }
 
