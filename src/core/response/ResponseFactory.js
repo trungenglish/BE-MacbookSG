@@ -1,30 +1,51 @@
 const SuccessResponse = require('./SuccessResponse');
 const ErrorResponse = require('./ErrorResponse');
+const NotFoundResponse = require('./NotFoundResponse');
 
 class ResponseFactory {
-    static success(data, message, statusCode) {
-        return new SuccessResponse(data, message, statusCode);
+    static SUCCESS = 'success';
+    static ERROR = 'error';
+    static NOT_FOUND = 'not_found';
+
+    static createResponse(type, message, data = null, statusCode = null) {
+        switch (type) {
+            case this.SUCCESS:
+                return new SuccessResponse(message, data);
+                
+            case this.ERROR:
+                return new ErrorResponse(message, statusCode || 500);
+                
+            case this.NOT_FOUND:
+                return new NotFoundResponse(message);
+                
+            default:
+                throw new Error('Invalid response type');
+        }
     }
 
-    static error(message, statusCode, errors) {
-        return new ErrorResponse(message, statusCode, errors);
+    static success(message, data = null) {
+        return this.createResponse(this.SUCCESS, message, data);
     }
 
-    static notFound(message = 'Resource not found') {
-        return new ErrorResponse(message, 404);
+    static error(message, statusCode = 500) {
+        return this.createResponse(this.ERROR, message, null, statusCode);
     }
 
-    static badRequest(message = 'Bad Request', errors = null) {
-        return new ErrorResponse(message, 400, errors);
+    static notFound(message = "Không tìm thấy tài nguyên") {
+        return this.createResponse(this.NOT_FOUND, message);
     }
 
-    static unauthorized(message = 'Unauthorized') {
-        return new ErrorResponse(message, 401);
-    }
+    // static badRequest(message = 'Bad Request', errors = null) {
+    //     return new ErrorResponse(message, 400, errors);
+    // }
 
-    static forbidden(message = 'Forbidden'){
-        return new ErrorResponse(message, 403);
-    }
+    // static unauthorized(message = 'Unauthorized') {
+    //     return new ErrorResponse(message, 401);
+    // }
+
+    // static forbidden(message = 'Forbidden'){
+    //     return new ErrorResponse(message, 403);
+    // }
 }
 
 module.exports = ResponseFactory;

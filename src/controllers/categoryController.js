@@ -7,15 +7,15 @@ const getAllCate = async (req, res) => {
         if (result.EC !== 0){
             return res
             .status(400)
-            .json(ResponseFactory.error(result.EM, 400));
+            .json(ResponseFactory.error(result.EM));
         }
         return res
             .status(200)
-            .json(ResponseFactory.success(result.data, result.EM, 200));
+            .json(ResponseFactory.success(result.data, result.EM));
     } catch (error) {
         return res
             .status(500)
-            .json(ResponseFactory.error('Internal server error', 500));
+            .json(ResponseFactory.error('Internal server error'));
     }
 }
 

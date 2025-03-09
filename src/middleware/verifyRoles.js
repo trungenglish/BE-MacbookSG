@@ -8,7 +8,6 @@ const verifyRoles = (...allowedRoles) => async (req, res, next) => {
             .status(401)
             .json(ResponseFactory.error(
                 'User information not found',
-                401,
             ));
         }
 
@@ -17,7 +16,6 @@ const verifyRoles = (...allowedRoles) => async (req, res, next) => {
             .status(401)
             .json(ResponseFactory.error(
                 'User roles not found',
-                401,
             ));
         }
 
@@ -33,15 +31,8 @@ const verifyRoles = (...allowedRoles) => async (req, res, next) => {
 
         if (!hasAllowedRole) {
             return res
-            .status(403)
-            .json(ResponseFactory.error(
-                'Insufficient permissions',
-                403,
-                {
-                    userRoles: userRoles,
-                    requiredRoles: allowedRoles
-                }
-            ));
+                .status(403)
+                .json(ResponseFactory.error('Insufficient permissions'));
         }
 
         next();
@@ -50,7 +41,6 @@ const verifyRoles = (...allowedRoles) => async (req, res, next) => {
             .status(500)
             .json(ResponseFactory.error(
                 error.message || 'Role verification failed',
-                500
             ));
     }
 }

@@ -58,7 +58,7 @@ const createProductService = async (name, description, idCategory, images, defau
         }
 
         const productDetail = new ProductDetail(specifications);
-            const savedProductDetail = await productDetail.save();
+        const savedProductDetail = await productDetail.save();
 
         const product = new Product({
             name,
