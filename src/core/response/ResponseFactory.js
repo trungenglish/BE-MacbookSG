@@ -1,6 +1,5 @@
 const SuccessResponse = require('./SuccessResponse');
 const ErrorResponse = require('./ErrorResponse');
-const NotFoundResponse = require('./NotFoundResponse');
 
 class ResponseFactory {
     static SUCCESS = 'success';
