@@ -15,8 +15,8 @@ const host = isProduction ? '0.0.0.0' : 'localhost';
 //config cors
 const corsOptions = {
     origin: [
-        'https://trungenglishmacbooksgclient.vercel.app',
-        'https://trungenglishmacbooksgadmin.vercel.app',
+        'https://sgmacbookclient.vercel.app',
+        'https://sgmacbookadmin.vercel.app',
         'http://localhost:5173',
         'http://localhost:5174'
     ],
