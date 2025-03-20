@@ -1,8 +1,8 @@
 require('dotenv').config();
 
-const connection = require('./config/database');
+const connection = require('../src/config/database');
 const express = require('express');
-const apiRoutes = require('./routes/index');
+const apiRoutes = require('../src/routes');
 const compression = require('compression');
 const morgan = require('morgan');
 const cors = require('cors');
