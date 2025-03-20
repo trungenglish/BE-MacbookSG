@@ -4,7 +4,7 @@ const {getAllAdministrator, updateAdministrator, deleteAdministrator} = require(
 const {adminRegister} = require("../../controllers/admin/authController");
 const routerAPI = express.Router();
 
-routerAPI.all("*", auth);
+routerAPI.all("*", auth());
 
 routerAPI.get('/administrator', getAllAdministrator)
 routerAPI.post('/administrator', adminRegister)

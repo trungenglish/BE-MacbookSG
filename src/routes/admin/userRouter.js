@@ -4,7 +4,7 @@ const auth = require("../../middleware/authMiddleware");
 const { getAllUsers, updateUsers, deleteUser, countUser} = require('../../controllers/admin/userController');
 const {userRegister} = require("../../controllers/user/authController");
 
-routerAPI.all("*", auth);
+routerAPI.all("*", auth());
 
 routerAPI.get('/users', getAllUsers);
 routerAPI.put('/users', updateUsers);
