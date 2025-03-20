@@ -21,7 +21,7 @@ const corsOptions = {
         'http://localhost:5174'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,  // Nếu bạn đang truyền cookies hoặc session
+    credentials: true,
 };
 
 app.use(cors(corsOptions));

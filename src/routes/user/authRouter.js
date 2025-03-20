@@ -7,7 +7,7 @@ const {adminRefreshToken} = require("../../controllers/admin/authController");
 
 routerAPI.post('/register',validateUser ,userRegister)
 routerAPI.post('/login',userLogin)
-routerAPI.get('/account', auth, userAccount)
+routerAPI.get('/account', auth(), userAccount)
 routerAPI.post('/refresh-token', userRefreshToken)
 
 module.exports = routerAPI;

@@ -7,7 +7,7 @@ const {getAllProduct, createProduct, updateProduct, deleteProduct, updateAvailab
 const validateProduct = require("../../middleware/validators/productValidator");
 const validateProductVariant = require("../../middleware/validators/productVariantValidator");
 
-routerAPI.all("*", auth);
+routerAPI.all("*", auth());
 
 routerAPI.get('/product', getAllProduct);
 routerAPI.post('/product', createProduct);
