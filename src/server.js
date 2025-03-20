@@ -45,3 +45,5 @@ app. use('/api/v1',apiRoutes);
         console.log(">>> Error connect to db: ", error);
     }
 })()
+
+module.exports = app;
