@@ -1,4 +1,4 @@
-const jwtHelper = require('../helpers/jwt.helper');
+const jwtHelper = require('./jwt.helper');
 
 class AuthStrategy {
     async authenticate(req) {
