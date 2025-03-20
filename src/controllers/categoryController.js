@@ -11,7 +11,7 @@ const getAllCate = async (req, res) => {
         }
         return res
             .status(200)
-            .json(ResponseFactory.success(result.data, result.EM));
+            .json(ResponseFactory.success(result.EM, result.data));
     } catch (error) {
         return res
             .status(500)
