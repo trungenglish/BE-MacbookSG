@@ -1,6 +1,10 @@
 require('dotenv').config();
 
 const Database = require('./config/database');
+const db1 = new Database();
+const db2 = new Database();
+const db3 = new Database();
+
 const express = require('express');
 const apiRoutes = require('./routes/index');
 const compression = require('compression');

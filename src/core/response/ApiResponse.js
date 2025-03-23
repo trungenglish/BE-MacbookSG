@@ -1,6 +1,6 @@
 class ApiResponse {
     constructor() {
-        if (this.constructor === IApiResponse) {
+        if (this.constructor === ApiResponse) {
             throw new Error("Interface không thể được khởi tạo trực tiếp.");
         }
     }

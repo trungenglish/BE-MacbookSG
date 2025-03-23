@@ -21,9 +21,12 @@ var dbState = [{
 
 class Database{
     constructor() {
+        console.log("🔄 [DEBUG] Constructor gọi...");
         if (!Database.instance) {
             this._connect();
             Database.instance = this;
+        }else {
+            console.log("⚠️ [DEBUG] Instance đã tồn tại!");
         }
         return Database.instance;
     }
@@ -44,4 +47,5 @@ class Database{
     }
 }
 
-module.exports = new Database();
+
+module.exports = Database;
